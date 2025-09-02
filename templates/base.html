@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>미니 프로젝트</title>
+  <link rel="stylesheet" href="/static/index.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-white">
+  {% block header %}
+  <header class="text-[oklch(0.985_0_0)] text-white py-8 px-4 bg-green-700">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+          <span class="font-bold text-2xl text-black">회원사진</span>
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold">필터</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+  {% endblock %}
+  <main class="max-w-6xl mx-auto py-8 px-4 md:py-12 md:px-6">
+    {% block content %}{% endblock %}
+  </main>
+  <script src="/static/index.js"></script>
+</body>
+</html>
