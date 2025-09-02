@@ -1,14 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
-        <div id="top-section">
-            <h2>프로필 사진이랑 목록 아이콘 들어가야함</h3> 
-        </div>
-
+<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex flex-col space-y-4 items-center justify-center p-4"> 
+<!-- 예린 section class에 flex-col space-y-4 추가함  -->
         <div id="my-info-section">
             <h2>내 정보</h2>
             <ul id="my-profile"></ul>
-             
+            <a href="/profile/edit">
+                <button>정보 수정</button>
+            </a>
         </div>
 
         <div id="quiz-correct-by-others-section">
@@ -20,6 +19,8 @@
             <h2>내가 맞춘 사람들</h2>
             <ul id="my-solved-list"></ul>
         </div>
-
 </section>
+
+<script src="{{ url_for('static', filename='user_profile.js') }}"></script>
+
 {% endblock %}

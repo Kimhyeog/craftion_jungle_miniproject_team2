@@ -3,9 +3,9 @@ from flask import Flask, render_template, request, jsonify
 from pymongo import MongoClient
 
 from user_profile import profile_bp  # 프로필 페이지 blueprint 불러오기 
-from user_info import info_bp
 
 app = Flask(__name__)
+app.register_blueprint(profile_bp)
 
 
 client = MongoClient("mongodb://localhost:27017")  # 인증 비활성화 상태
@@ -26,7 +26,7 @@ def login_page():
 def signup_page():
   return render_template("auth/signup.html")
 
-@app.route("/mypage")
+@app.route("/profile")
 def mypage():
   return render_template("user/mypage.html")
 
