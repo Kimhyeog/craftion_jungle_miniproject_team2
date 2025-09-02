@@ -6,17 +6,22 @@
   <link rel="stylesheet" href="/static/index.css" />
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="min-h-screen mx-auto to-white">
-  <nav class="bg-green-700 flex justify-center gap-4 p-4 text-white">
-    <!-- <a class="hover:underline" href="{{ url_for('main_page') }}">메인</a>
-    <a class="hover:underline" href="{{ url_for('login_page') }}">로그인</a>
-    <a class="hover:underline" href="{{ url_for('signup_page') }}">회원가입</a>
-    <a class="hover:underline" href="{{ url_for('mypage') }}">마이페이지</a>
-    <a class="hover:underline" href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
-   -->
-  
-  </nav>
-  <main class="container mx-auto p-6">
+<body class="min-h-screen bg-gradient-to-br from-green-50 to-white">
+  {% block header %}
+  <header class="text-[oklch(0.985_0_0)] text-white py-8 px-4 bg-green-700">
+    <div class="max-w-6xl mx-auto text-center">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center">
+          <span class="font-bold text-2xl text-black">회원사진</span>
+        </div>
+        <div>
+          <h1 class="text-4xl font-bold">필터</h1>
+        </div>
+      </div>
+    </div>
+  </header>
+  {% endblock %}
+  <main class="max-w-6xl mx-auto py-8 px-4 md:py-12 md:px-6">
     {% block content %}{% endblock %}
   </main>
   <script src="/static/index.js"></script>
