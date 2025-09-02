@@ -28,3 +28,5 @@
   
 //     load();
 //   });
+
+lucide.createIcons();
