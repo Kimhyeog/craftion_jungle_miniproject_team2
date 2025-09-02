@@ -4,16 +4,19 @@
   <meta charset="UTF-8" />
   <title>미니 프로젝트</title>
   <link rel="stylesheet" href="/static/index.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <nav>
-    <a href="{{ url_for('main_page') }}">메인</a>
-    <a href="{{ url_for('login_page') }}">로그인</a>
-    <a href="{{ url_for('signup_page') }}">회원가입</a>
-    <a href="{{ url_for('mypage') }}">마이페이지</a>
-    <a href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
+<body class="min-h-screen mx-auto to-white">
+  <nav class="bg-green-700 flex justify-center gap-4 p-4 text-white">
+    <!-- <a class="hover:underline" href="{{ url_for('main_page') }}">메인</a>
+    <a class="hover:underline" href="{{ url_for('login_page') }}">로그인</a>
+    <a class="hover:underline" href="{{ url_for('signup_page') }}">회원가입</a>
+    <a class="hover:underline" href="{{ url_for('mypage') }}">마이페이지</a>
+    <a class="hover:underline" href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
+   -->
+  
   </nav>
-  <main>
+  <main class="container mx-auto p-6">
     {% block content %}{% endblock %}
   </main>
   <script src="/static/index.js"></script>
