@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>미니 프로젝트</title>
+  <link rel="stylesheet" href="/static/index.css" />
+</head>
+<body>
+  <nav>
+    <a href="{{ url_for('main_page') }}">메인</a>
+    <a href="{{ url_for('login_page') }}">로그인</a>
+    <a href="{{ url_for('signup_page') }}">회원가입</a>
+    <a href="{{ url_for('mypage') }}">마이페이지</a>
+    <a href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
+  </nav>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+  <script src="/static/index.js"></script>
+</body>
+</html>
