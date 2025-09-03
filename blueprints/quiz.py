@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
+from flask import redirect, url_for
 from database import db
 from bson import ObjectId
 
@@ -12,6 +13,13 @@ def quiz_list():
     
         return render_template("quiz/list.html", users=users )
 
+@quiz_bp.route("/usr/<string:_userId>")
+def change_userid_to_dbid(_userId):
+  print ("in herre")
+  user = db.users.find_one({'userId': _userId})
+  return redirect(url_for('quiz.quiz_dashboard', db_id=str(user['_id'])))
+
+    
 
 @quiz_bp.route("/dashboard/<string:db_id>")
 def quiz_dashboard(db_id):
