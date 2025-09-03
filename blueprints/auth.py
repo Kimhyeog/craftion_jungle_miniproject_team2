@@ -9,7 +9,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
-
 # 'auth' 라는 이름의 Blueprint를 생성합니다.
 auth_bp = Blueprint('auth', __name__)
 
