@@ -1,3 +1,22 @@
+// modal 함수 추가 
+function  showModal(title, message) 
+{
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalMessage = document.getElementById("modal-message");
+  const closeBtn = document.getElementById("close-modal");
+
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  modal.classList.remove("hidden");
+
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+
+}
+
 // 회원가입과 로그인 폼 처리
 document.addEventListener('DOMContentLoaded', function () {
   
@@ -39,15 +58,17 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then((data) => {
           if (data.result === 'success') {
-            alert('회원가입에 성공했습니다! 로그인 페이지로 이동합니다.');
-            window.location.href = data.redirect_url;
+            showModal("✅ 회원가입 성공", "회원가입에 성공했습니다! 로그인 페이지로 이동합니다.");
+            setTimeout(() => {
+              window.location.href = data.redirect_url;
+            }, 2000)
           } else {
-            alert(data.msg || '회원가입 중 오류가 발생했습니다.');
+            showModal("❌ 회원가입 실패", data.msg || "회원가입 중 오류가 발생했습니다.");
           }
         })
         .catch((error) => {
           console.error('Error:', error);
-          alert('이미 존재하는 아이디 입니다.');
+          showModal("🚨 오류 발생", "요청 처리 중 심각한 오류가 발생했습니다.");
         })
         .finally(() => {
           // 제출 상태 초기화
@@ -98,16 +119,18 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then((data) => {
           if (data.result === 'success') {
-            alert('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
+            showModal("🔑 로그인 성공", "로그인에 성공했습니다. 메인 페이지로 이동합니다.");
             const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
-            window.location.href = destinationUrl;
+            setTimeout(() => {
+              window.location.href = destinationUrl;
+            }, 2000)
           } else {
-            alert(data.msg || '로그인에 실패했습니다.');
+            showModal("❌ 로그인 실패", data.msg);
           }
         })
         .catch((error) => {
           console.error('Error:', error);
-          alert('요청 처리 중 오류가 발생했습니다.');
+          showModal("🚨 오류 발생", "요청 처리 중 오류가 발생했습니다.");
         })
         .finally(() => {
           // 로그인 상태 초기화
