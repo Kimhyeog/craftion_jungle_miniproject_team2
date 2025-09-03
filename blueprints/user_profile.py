@@ -2,36 +2,23 @@ from flask import Blueprint, render_template, abort, request, jsonify
 from bson import ObjectId
 from datetime import datetime, timezone, timedelta
 import jwt
-# 독립적인 MongoClient 연결 대신, 공유되는 db 객체를 가져옵니다.
 from database import db
 
-# Blueprint 이름은 그대로 사용하되, 파일 위치가 바뀌었습니다.
 profile_bp = Blueprint("user_profile", __name__)
 
-# JWT 시크릿 키 (auth.py와 동일해야 함)
 SECRET_KEY = "your-secret-key-here-change-this-in-production"
 
-
-# 참고: app.py에서 url_prefix="/user"를 설정했기 때문에,
-# 이 라우트의 실제 접속 주소는 '/user/profile'이 됩니다.
-# --- 마이페이지 렌더링 함수를 수정합니다 ---
 @profile_bp.route("/profile", methods=['GET'])
 def make_profile():
-    # JWT 기반으로 클라이언트가 /user/api/me를 호출하므로 쿼리 id가 필요 없습니다.
     return render_template("user/mypage.html")
 
-
-#  db아이디 대신 userId로 변경 
-# --- get_user_info 함수를 좀 더 안전하게 수정합니다 (오류 방지) ---
 @profile_bp.route("/api/users/<string:_userId>", methods=['GET'])
 def get_user_info(_userId):
-    # userId는 단순 문자열이므로 ObjectId 검증을 하지 않습니다.
     user = db.users.find_one({'userId': _userId})
     
     if not user:
         return jsonify({'result': 'fail', 'msg': '사용자를 찾을 수 없습니다.'}), 404
 
-    # .get() 메소드를 사용하면 해당 키가 없을 때 오류 대신 기본값(None 또는 [])을 반환하여 더 안전합니다.
     quiz_info = user.get('quizInfo', {})
     return jsonify({
         'result': 'success',
@@ -49,7 +36,6 @@ def get_user_info(_userId):
         'usersISolvedCount': user.get('usersISolvedCount', 0)
     })
 
-# 현재 로그인한 사용자 정보 (JWT 필요)
 @profile_bp.route("/api/me", methods=['GET'])
 def get_my_profile():
     token = request.cookies.get('mytoken')
@@ -89,14 +75,12 @@ def get_my_profile():
         'usersISolvedCount': user.get('usersISolvedCount', 0)
     })
 
-# 실제 접속 주소: '/user/profile/edit'
 @profile_bp.route("/profile/edit", methods=['GET'])
 def get_edit_page():
     return render_template("user/mypage_edit.html")
 
 @profile_bp.route("/profile/edit", methods=['POST'])
 def post_edit_info():
-    # JWT 인증
     token = request.cookies.get('mytoken')
     if not token:
         return jsonify({'result': 'fail', 'msg': '로그인이 필요합니다.'}), 401
@@ -109,7 +93,6 @@ def post_edit_info():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '유효하지 않은 토큰입니다.'}), 401
 
-    # 폼 입력값 수집
     nickName = request.form.get('nickName', '').strip()
     hobby = request.form.get('hobby', '').strip()
     mbti = request.form.get('mbti', '').strip()
@@ -117,7 +100,6 @@ def post_edit_info():
     motivate = request.form.get('motivate', '').strip()
     favoriteFood = request.form.get('favoriteFood', '').strip()
 
-    # 업데이트 문서 구성
     update_doc = {
         'quizInfo.nickName': nickName,
         'quizInfo.hobby': hobby,

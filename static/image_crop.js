@@ -1,4 +1,3 @@
-// Image crop flow for signup profile image
 (function () {
   let cropper = null;
   const input = document.getElementById('file-upload');
@@ -32,7 +31,6 @@
     const url = URL.createObjectURL(file);
     img.src = url;
     openModal();
-    // Wait image loaded
     img.onload = () => {
       if (cropper) cropper.destroy();
       cropper = new Cropper(img, {
@@ -47,7 +45,6 @@
         responsive: true,
         preview: previewBox ? previewBox : undefined,
         ready() {
-          // circle preview via CSS mask using container (visual only)
         },
       });
     };
@@ -56,7 +53,6 @@
   const toFile = (blob, fileName) => new File([blob], fileName, { type: blob.type, lastModified: Date.now() });
 
   const replaceInputFile = (file) => {
-    // Replace the file in the input by using DataTransfer
     const dt = new DataTransfer();
     dt.items.add(file);
     input.files = dt.files;
@@ -68,7 +64,6 @@
       if (!blob) return;
       const file = toFile(blob, 'profile_cropped.png');
       replaceInputFile(file);
-      // 미리보기 반영
       if (profilePreviewImg) {
         profilePreviewImg.src = URL.createObjectURL(blob);
         profilePreviewImg.classList.remove('hidden');

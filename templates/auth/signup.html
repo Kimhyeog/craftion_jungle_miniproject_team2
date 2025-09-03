@@ -21,17 +21,13 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       </a>
     </div>
 
-    <!-- 화원 가입 Input Card -->
     <div class="flex flex-col items-center justify-center gap-6 rounded-xl border border-green-100 bg-white py-6 px-6 text-slate-900 shadow-sm">
-      <!-- Card Title -->
       <div class="flex flex-col items-center justify-center gap-3">
         <h1 class="font-semibold text-2xl leading-none">회원 가입</h1>
         <p>동기들과 함께하는 퀴즈 게임에 참여하기 위해 프로필을 작성해주세요</p>
       </div>
-      <!-- 자식 Card -->
       <div class="w-full flex flex-col items-center justify-center gap-3 rounded-xl border border-green-100 bg-white py-6 px-6 text-slate-900 shadow-sm">
       
-      <!-- 자식 Card Title -->
       <div class="w-full flex items-start items-start gap-2  font-semibold text-lg" >
           <i data-lucide="camera" class="my-custom-icon"></i> 프로필 사진
         </div>
@@ -40,14 +36,12 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
           <img id="profile-preview-img" alt="preview" class="hidden w-full h-full object-cover" />
           <i id="profile-preview-icon" data-lucide="upload" class="w-8 h-8 text-green-400"></i>
         </div>
-        <!-- 사진 업로드 박스 -->
         <label for="file-upload" class="flex h-9 min-w-0 cursor-pointer items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground hover:bg-slate-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30 dark:hover:bg-slate-800 dark:aria-invalid:ring-destructive/40 md:text-sm">
           사진을 업로드 해주세요
         </label>
 
         <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" required/>
 
-        <!-- 크롭 모달 -->
         <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
           <div class="w-full max-w-xl rounded-xl bg-white shadow-lg">
             <div class="flex items-center justify-between border-b px-4 py-3">
@@ -58,7 +52,6 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
               <div class="w-full">
                 <img id="cropper-image" class="max-h-[60vh] w-full object-contain" alt="crop source" />
               </div>
-              <!-- 원형 미리보기 -->
               <div class="flex items-center justify-center">
                 <div class="w-28 h-28 rounded-full overflow-hidden border">
                   <div id="cropper-preview" class="w-28 h-28"></div>
@@ -73,8 +66,6 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
         </div>
       </div>
 
-      <!-- 아이디 비번 기입 Box -->
-      <!-- 아이디/비밀번호 입력 -->
       <div class="px-3 w-full grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6">
         <div class="space-y-2">
           <label for="userId" class="text-sm font-medium text-slate-700">아이디 *</label>
@@ -97,7 +88,6 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       </div>
       
 
-      <!-- 개인 정보 기입 Box -->
        <div class="px-3 w-full grid grid-cols-2 gap-6">
         <div class="space-y-2">
           <label for="userName" class="text-sm font-medium text-slate-700">이름 *</label>
@@ -191,8 +181,6 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
           required />
       </div>
       <div class="w-full flex flex-col items-center justify-center ...">
-      <!-- ... -->
-      <!-- 중요! : 회원가입 완료를 위한 제출 버튼이 필요합니다. -->
       <button type="submit" class="w-full max-w-xs mt-6 h-12 rounded-lg bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition-colors">
         회원가입
       </button>
@@ -220,4 +208,4 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
 <script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
 <script src="{{ url_for('static', filename='image_crop.js') }}"></script>
 <script src="{{ url_for('static', filename='auth.js') }}"></script>
-{% endblock %} <!-- scripts 블록 끝 <-- 이 줄을 추가하세요! -->
+{% endblock %}

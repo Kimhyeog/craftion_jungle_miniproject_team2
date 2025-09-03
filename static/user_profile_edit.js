@@ -17,7 +17,6 @@ function  showModal(title, message)
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    // 1) 내 정보 불러와서 프리필
     try {
       const meRes = await fetch('/user/api/me');
       if (!meRes.ok) throw new Error('unauthorized');
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
       return;
     }
   
-    // 2) 제출 처리
     const form = document.getElementById('profile-edit-form');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();

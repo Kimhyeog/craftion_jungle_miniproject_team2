@@ -1,4 +1,3 @@
-// modal 함수 추가 
 function  showModal(title, message) 
 {
   const modal = document.getElementById("modal");
@@ -17,9 +16,7 @@ function  showModal(title, message)
 
 }
 
-// 토큰 만료 시 자동 로그인 페이지 이동 함수
 function checkTokenExpiration() {
-  // 현재 페이지가 로그인/회원가입 페이지가 아닌 경우에만 토큰 확인
   const currentPath = window.location.pathname;
   if (currentPath.includes('/auth/login') || currentPath.includes('/auth/signup')) {
     return;
@@ -29,7 +26,6 @@ function checkTokenExpiration() {
     .then(response => response.json())
     .then(data => {
       if (data.result === 'fail') {
-        // 토큰이 만료되었거나 유효하지 않은 경우
         if (data.msg === '로그인 시간이 만료되었습니다.' || 
             data.msg === '유효하지 않은 토큰입니다.' ||
             data.msg === '존재하지 않는 사용자입니다.' ||
@@ -44,7 +40,6 @@ function checkTokenExpiration() {
     });
 }
 
-// 인증 실패 시 공통 처리 함수
 function handleAuthFailure(data) {
   if (data.result === 'fail' && data.redirect_url) {
     alert(data.msg);
@@ -52,7 +47,6 @@ function handleAuthFailure(data) {
   }
 }
 
-// fetch 요청에 인증 실패 처리 추가
 function fetchWithAuth(url, options = {}) {
   return fetch(url, options)
     .then(response => response.json())
@@ -65,31 +59,23 @@ function fetchWithAuth(url, options = {}) {
     });
 }
 
-// 회원가입과 로그인 폼 처리
 document.addEventListener('DOMContentLoaded', function () {
   
-  // 페이지 로드 시 토큰 상태 확인
   checkTokenExpiration();
   
-  // --- 1. 회원가입 폼 처리 ---
   const signupForm = document.getElementById('signup-form');
   if (signupForm) {
-    // 중복 제출 방지를 위한 플래그
     let isSubmitting = false;
     
     signupForm.addEventListener('submit', function (event) {
-      // 기본 폼 제출(새로고침) 방지
       event.preventDefault();
       
-      // 이미 제출 중이면 중단
       if (isSubmitting) {
         return;
       }
       
-      // 제출 상태로 설정
       isSubmitting = true;
       
-      // 버튼 비활성화
       const submitButton = this.querySelector('button[type="submit"]');
       const originalText = submitButton.textContent;
       submitButton.disabled = true;
@@ -122,35 +108,27 @@ document.addEventListener('DOMContentLoaded', function () {
           showModal("🚨 오류 발생", "이미 등록된 아이디입니다.");
         })
         .finally(() => {
-          // 제출 상태 초기화
           isSubmitting = false;
           
-          // 버튼 다시 활성화
           submitButton.disabled = false;
           submitButton.textContent = originalText;
         });
     });
   }
 
-  // --- 2. 로그인 폼 처리 ---
   const loginForm = document.getElementById('login-form');
   if (loginForm) {
-    // 중복 제출 방지를 위한 플래그
     let isLoggingIn = false;
     
     loginForm.addEventListener('submit', function (event) {
-      // 기본 폼 제출(새로고침) 방지
       event.preventDefault();
       
-      // 이미 로그인 중이면 중단
       if (isLoggingIn) {
         return;
       }
       
-      // 로그인 상태로 설정
       isLoggingIn = true;
       
-      // 버튼 비활성화
       const submitButton = this.querySelector('button[type="submit"]');
       const originalText = submitButton.textContent;
       submitButton.disabled = true;
@@ -184,10 +162,8 @@ document.addEventListener('DOMContentLoaded', function () {
           showModal("🚨 오류 발생", "요청 처리 중 오류가 발생했습니다.");
         })
         .finally(() => {
-          // 로그인 상태 초기화
           isLoggingIn = false;
           
-          // 버튼 다시 활성화
           submitButton.disabled = false;
           submitButton.textContent = originalText;
         });
