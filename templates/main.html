@@ -7,9 +7,11 @@
   </header>
 
   <nav class="flex flex-wrap gap-3">
-    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700" href="{{ url_for('login_page') }}">로그인</a>
-    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700" href="{{ url_for('signup_page') }}">회원가입</a>
-    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-slate-700 text-white hover:bg-slate-800" href="{{ url_for('mypage') }}">마이페이지</a>
+    <!-- 'auth.login_page'로 수정 -->
+    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700" href="{{ url_for('auth.login_page') }}">로그인</a>
+    <!-- 'auth.signup_page'로 수정 -->
+    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700" href="{{ url_for('auth.signup_page') }}">회원가입</a>
+    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-slate-700 text-white hover:bg-slate-800" href="{{ url_for('user_profile.make_profile') }}">마이페이지</a>
     <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-violet-600 text-white hover:bg-violet-700" href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
   </nav>
 
@@ -25,9 +27,11 @@
     <aside class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm">
       <h3 class="text-lg font-semibold mb-2">바로가기</h3>
       <ul class="space-y-2">
-        <li><a class="text-blue-600 hover:underline" href="{{ url_for('login_page') }}">로그인 페이지</a></li>
-        <li><a class="text-blue-600 hover:underline" href="{{ url_for('signup_page') }}">회원가입 페이지</a></li>
-        <li><a class="text-blue-600 hover:underline" href="{{ url_for('mypage') }}">마이페이지</a></li>
+         <!-- 'auth.login_page'로 수정 -->
+        <li><a class="text-blue-600 hover:underline" href="{{ url_for('auth.login_page') }}">로그인 페이지</a></li>
+        <!-- 'auth.signup_page'로 수정 -->
+        <li><a class="text-blue-600 hover:underline" href="{{ url_for('auth.signup_page') }}">회원가입 페이지</a></li>
+        <li><a class="text-blue-600 hover:underline" href="{{ url_for('user_profile.make_profile') }}">마이페이지</a></li>
         <li><a class="text-blue-600 hover:underline" href="{{ url_for('quiz_list') }}">퀴즈 목록</a></li>
       </ul>
     </aside>

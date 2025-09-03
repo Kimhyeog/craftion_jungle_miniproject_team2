@@ -1,20 +1,20 @@
 # 필요한 라이브러리 import
-from flask import Flask, render_template, request, jsonify
-from pymongo import MongoClient
+from flask import Flask, render_template
 
-from blueprints.user_profile import profile_bp  # 프로필 페이지 blueprint 불러오기 
-from blueprints.upload_picture import upload_bp
+# blueprints 폴더에 있는 user_profile 모듈에서 profile_bp를 가져옵니다.
+from blueprints.user_profile import profile_bp
+from blueprints.auth import auth_bp  # 'profile_bp'를 'auth_bp'로 수정했습니다!
 
 app = Flask(__name__)
-app.register_blueprint(profile_bp)
-app.register_blueprint(upload_bp)
 
-app.config['MAX_CONTENT_LENGTH'] = 2 # 2MB
+# Blueprint 등록
+# url_prefix를 사용하면 이 Blueprint에 등록된 모든 라우트 앞에 '/user'가 붙습니다.
+# 예: /profile -> /user/profile
+app.register_blueprint(profile_bp, url_prefix="/user")
 
-
-client = MongoClient("mongodb://localhost:27017")  # 인증 비활성화 상태
-db = client["dbNameSns"]
-posts = db["posts"]
+# 2. auth 블루프린트 등록
+# profile_bp를 auth_bp로 바꿔주세요.
+app.register_blueprint(auth_bp, url_prefix="/auth") # <- 이렇게 auth_bp로 수정해야 합니다.
 
 #페이지 라우터
 
@@ -22,17 +22,14 @@ posts = db["posts"]
 def main_page() :
   return render_template("main.html")
 
-@app.route("/login")
-def login_page():
-  return render_template("auth/login.html")
+# @app.route("/login")
+# def login_page():
+#   return render_template("auth/login.html")
 
-@app.route("/signup")
-def signup_page():
-  return render_template("auth/signup.html")
+# @app.route("/signup")
+# def signup_page():
+#   return render_template("auth/signup.html")
 
-@app.route("/profile")
-def mypage():
-  return render_template("user/mypage.html")
 
 @app.route("/quiz")
 def quiz_list():

@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block header %}{% endblock %}
 {% block content %}
-<form class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
+<form 
+id="signup-form"
+  method="post"
+  action="{{ url_for('auth.signup_page') }}"
+class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
   <div class="max-w-2xl mx-auto">
     <div class="text-center mb-8">
       <a href="/" class="inline-flex items-center gap-3 mb-6">
@@ -43,8 +47,34 @@
   
         <input id="file-upload" type="file" class="sr-only" />
       </div>
+
+      <!-- 아이디 비번 기입 Box -->
+      <!-- 아이디/비밀번호 입력 -->
+      <div class="px-3 w-full grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6">
+        <div class="space-y-2">
+          <label for="userId" class="text-sm font-medium text-slate-700">아이디 *</label>
+          <input
+            id="userId"
+            name="userId"
+            type="text"
+            placeholder="your@email.com"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
+            required />
+        </div>
+        <div class="space-y-2">
+          <label for="password" class="text-sm font-medium text-slate-700">비밀번호 *</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
+            required />
+        </div>
+      </div>
       
-      <div class="px-3 w-full grid grid-cols-2 gap-6">
+
+      <!-- 개인 정보 기입 Box -->
+       <div class="px-3 w-full grid grid-cols-2 gap-6">
         <div class="space-y-2">
           <label for="userName" class="text-sm font-medium text-slate-700">이름 *</label>
           <input
@@ -136,7 +166,17 @@
           class="flex h-9 w-full  min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
           required />
       </div>
+      <div class="flex flex-col items-center justify-center ...">
+      <!-- ... -->
+      <!-- 중요! : 회원가입 완료를 위한 제출 버튼이 필요합니다. -->
+      <button type="submit" class="w-full max-w-xs mt-6 h-12 rounded-lg bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition-colors">
+        회원가입 완료
+      </button>
+    </div>
     </div>
   <script src="https://unpkg.com/lucide@latest"></script>
 </form>
 {% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='auth.js') }}"></script>
+{% endblock %} <!-- scripts 블록 끝 <-- 이 줄을 추가하세요! -->

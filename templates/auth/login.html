@@ -23,14 +23,14 @@
       로그인
     </div>
     <p class="text-sm font-semibold text-[oklch(0.556_0_0)]">계정에 로그인하여 퀴즈 게임을 시작하세요</p>
-    <form class="w-full space-y-4" method="post" action="{{ url_for('login_page') }}">
+    <form class="w-full space-y-4" method="post" action="{{ url_for('auth.login_page') }}">
       <div class="space-y-2">
-        <label for="email" class="text-sm font-medium text-slate-700">이메일</label>
+        <label for="userId" class="text-sm font-medium text-slate-700">이메일</label>
         <input
-          id="email"
-          name="email"
-          type="email"
-          placeholder="your@email.com"
+          id="userId"
+          name="userId"
+          type="text"
+          placeholder="아이디를 입력하세요"
           class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
           required
         />
@@ -51,9 +51,9 @@
       </button>
     </form>
     <p class="text-sm text-gray-600">
-      아직 계정이 없으신가요?
-      <a href="{{ url_for('signup_page') }}" class="text-green-700 hover:underline font-medium">회원가입</a>
-    </p>
+      아직 계정이 없으신가요?<!-- 바로 이 부분의 url_for를 수정합니다. -->
+        <a href="{{ url_for('auth.signup_page') }}" class="text-green-700 hover:underline font-medium">회원가입</a>
+      </p>
   </div>
 
 </div>
