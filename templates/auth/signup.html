@@ -2,6 +2,7 @@
 {% block header %}{% endblock %}
 {% block content %}
 <form 
+id="signup-form"
   method="post"
   action="{{ url_for('auth.signup_page') }}"
 class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
@@ -150,3 +151,6 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
   <script src="https://unpkg.com/lucide@latest"></script>
 </form>
 {% endblock %}
+{% block scripts %}
+<script src="{{ url_for('static', filename='auth.js') }}"></script>
+{% endblock %} <!-- scripts 블록 끝 <-- 이 줄을 추가하세요! -->
