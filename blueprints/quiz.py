@@ -8,9 +8,7 @@ quiz_bp = Blueprint('quiz', __name__)
 
 @quiz_bp.route("/list")
 def quiz_list():
-   
         users = list(db.users.find({}, {'quizInfo': 1, 'userId': 1}))
-    
         return render_template("quiz/list.html", users=users )
 
 @quiz_bp.route("/usr/<string:_userId>")

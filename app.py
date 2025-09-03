@@ -20,7 +20,7 @@ app.register_blueprint(quiz_bp, url_prefix="/quiz")
 
 @app.route("/")
 def main_page() :
-  return render_template("main.html")
+  return render_template("auth/login.html")
 
 # @app.route("/login")
 # def login_page():

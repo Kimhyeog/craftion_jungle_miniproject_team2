@@ -127,7 +127,7 @@ def login_page():
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
             # 5. 응답(JSON) + HttpOnly 쿠키 설정
-            main_page_url = url_for('main_page')
+            main_page_url = url_for('quiz.quiz_list')
             resp = jsonify({
                 'result': 'success',
                 'msg': '로그인에 성공했습니다!',
