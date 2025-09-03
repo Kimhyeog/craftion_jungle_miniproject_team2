@@ -56,10 +56,6 @@ function    get_solver_info(response)
     else
     {
         make_my_solver_card(response.userWhoSolvedMe)
-        const my_solver_notice = `
-            
-        `
-        $('#my-solver').html(my_solver_notice)
     }
 }
 
