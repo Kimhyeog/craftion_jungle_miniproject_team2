@@ -5,6 +5,10 @@ from flask import Flask, render_template
 from blueprints.user_profile import profile_bp
 from blueprints.auth import auth_bp  # 'profile_bp'를 'auth_bp'로 수정했습니다!
 
+from bson import ObjectId
+
+from database import db
+
 app = Flask(__name__)
 
 # Blueprint 등록
@@ -38,6 +42,30 @@ def quiz_list():
 @app.route("/dashboard")
 def quiz_dashboard():
   return render_template("quiz/dashboard.html")
+
+@app.route("/dashboard/<string:db_id>")
+def quiz_user_dashboard_page(db_id):
+  if not ObjectId.is_valid(db_id):
+    return "Invalid user ID format", 400
+
+  user = db.users.find_one({'_id': ObjectId(db_id)})
+  
+  if (user['userWhoSolvedMeCount'] != 0) :
+    return render_template("quiz/list.html")
+
+  # print(user['userName'])
+
+  return render_template(
+    "quiz/dashboard.html", 
+    nickName = user['quizInfo']['nickName'],
+    profilePhoto = user['quizInfo']['profilePhoto'],
+    selfIntro = user['quizInfo']['selfIntro'],
+    selfMotive = user['quizInfo']['selfMotive'],
+    favoriteFood = user['quizInfo']['favoriteFood'],
+    mbti = user['quizInfo']['mbti'],
+    hobby = user['quizInfo']['hobby'],
+    correctName = user['userName']
+  )
 
 
 if __name__ == "__main__" :

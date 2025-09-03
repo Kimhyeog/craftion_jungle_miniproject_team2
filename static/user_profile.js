@@ -1,4 +1,22 @@
 
+function  showModal(title, message) 
+{
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalMessage = document.getElementById("modal-message");
+  const closeBtn = document.getElementById("close-modal");
+
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  modal.classList.remove("hidden");
+
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+
+}
+
 $(document).ready(function() {
     // 이 html이 로드되면 뭘 할지 
     make_profile_page()
@@ -13,7 +31,9 @@ function    make_profile_page() {
     // 2. 만약 ID가 없다면?
     if (!db_id) {
        // 여기서 함수가 중단(return)되어 버린다!
-        alert("사용자 정보를 불러올 수 없습니다. URL에 ID가 포함되어 있는지 확인하세요.");
+        // alert("사용자 정보를 불러올 수 없습니다. URL에 ID가 포함되어 있는지 확인하세요.");
+        showModal("🚨 사용자 정보 없음", "찾을 수 없습니다.");
+
         return;
     }
 
@@ -29,7 +49,7 @@ function    make_profile_page() {
                 display_solver_info(response);
                 display_my_solved_targets_info(response);
             }
-            error: ()=>alert("서버와 통신 중 오류가 발생했습니다.");
+            error: ()=>showModal("🌐 서버 오류", "서버와 연결이 끊어졌습니다.. ");
         
         }
     });
