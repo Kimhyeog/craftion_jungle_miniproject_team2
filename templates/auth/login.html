@@ -23,7 +23,9 @@
       로그인
     </div>
     <p class="text-sm font-semibold text-[oklch(0.556_0_0)]">계정에 로그인하여 퀴즈 게임을 시작하세요</p>
-    <form class="w-full space-y-4" method="post" action="{{ url_for('auth.login_page') }}">
+    <form 
+      id="login-form"
+    class="w-full space-y-4" method="post" action="{{ url_for('auth.login_page') }}">
       <div class="space-y-2">
         <label for="userId" class="text-sm font-medium text-slate-700">이메일</label>
         <input
@@ -51,11 +53,16 @@
       </button>
     </form>
     <p class="text-sm text-gray-600">
-      아직 계정이 없으신가요?<!-- 바로 이 부분의 url_for를 수정합니다. -->
+      아직 계정이 없으신가요?
         <a href="{{ url_for('auth.signup_page') }}" class="text-green-700 hover:underline font-medium">회원가입</a>
       </p>
   </div>
 
 </div>
 </section>
+{% endblock %}
+
+<!-- [추가] auth.js를 불러오기 위한 스크립트 블록 -->
+{% block scripts %}
+<script src="{{ url_for('static', filename='auth.js') }}"></script>
 {% endblock %}

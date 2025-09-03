@@ -1,4 +1,4 @@
-// 문서의 모든 내용이 로드된 후, 아래의 코드를 실행합니다.
+// 회원가입 버튼 이벤트 핸들러
 document.addEventListener('DOMContentLoaded', function () {
   // id가 'signup-form'인 요소를 찾습니다.
   const signupForm = document.getElementById('signup-form');
@@ -39,3 +39,74 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 });
+
+// 로그인 버튼 이벤트 핸들러
+document.addEventListener('DOMContentLoaded', function () {
+  
+  // --- 1. 회원가입 폼 처리 (기존 코드) ---
+  const signupForm = document.getElementById('signup-form');
+  if (signupForm) {
+    signupForm.addEventListener('submit', function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+      fetch(this.action, {
+        method: this.method,
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.result === 'success') {
+            alert('회원가입에 성공했습니다! 로그인 페이지로 이동합니다.');
+
+            // [가장 중요한 수정]
+            // 서버가 알려준 ID를 URL에 꼬리표로 붙여서 이동합니다.
+            // 예: /?id=68b71902c2592ccd641f586b
+            // const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
+            // window.location.href = destinationUrl;
+            // window.location.href = data.redirect_url;
+          } else {
+            alert(data.msg || '회원가입 중 오류가 발생했습니다.');
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    });
+  }
+
+  // --- 2. 로그인 폼 처리 (새로 추가된 코드) ---
+  const loginForm = document.getElementById('login-form');
+  if (loginForm) {
+    loginForm.addEventListener('submit', function (event) {
+      // 기본 폼 제출(새로고침) 방지
+      event.preventDefault();
+
+      const formData = new FormData(this);
+
+      fetch(this.action, {
+        method: this.method,
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          // 서버로부터 받은 응답 처리
+          if (data.result === 'success') {
+            // 성공 시
+            alert('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
+            // [가장 중요한 수정]
+            // 서버가 알려준 ID를 URL에 꼬리표로 붙여서 이동합니다.
+            // 예: /?id=68b71902c2592ccd641f586b
+            const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
+            window.location.href = destinationUrl;
+
+          } else {
+            // 실패 시
+            alert(data.msg); // 서버가 보내준 실패 메시지 보여주기
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          alert('요청 처리 중 오류가 발생했습니다.');
+        });
+    });
+  }
+});
+
