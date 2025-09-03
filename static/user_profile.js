@@ -72,9 +72,7 @@ function display_solver_info(user) {
         $('#my-solver').html(`<p class="text-gray-500">아직 나를 맞춘 사람이 없어요.</p>`);
     } else {
         // [수정] userWhoSolvedMe는 ID가 담긴 '배열'이므로, 각 ID에 대해 카드를 만듭니다.
-        user.userWhoSolvedMe.forEach(solverId => {
-            makeUserCard(solverId, '#my-solver');
-        });
+        makeUserCard(user.userWhoSolvedMe, "#my-solver");
     }
 }
 

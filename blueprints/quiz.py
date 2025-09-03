@@ -53,6 +53,12 @@ def quiz_list():
         search_keyword=search_keyword
     )
 
+@quiz_bp.route("/usr/<string:_userId>")
+def change_userid_to_dbid(_userId):
+  print ("in herre")
+  user = db.users.find_one({'userId': _userId})
+  return redirect(url_for('quiz.quiz_dashboard', db_id=str(user['_id'])))
+
 # ... (이하 다른 라우터는 동일) ...
 @quiz_bp.route("/dashboard/<string:db_id>")
 def quiz_dashboard(db_id):
@@ -77,5 +83,28 @@ def quiz_dashboard(db_id):
     favoriteFood = user['quizInfo']['favoriteFood'],
     mbti = user['quizInfo']['mbti'],
     hobby = user['quizInfo']['hobby'],
-    correctName = user['userName']
+    correctName = user['userName'], 
+    targetId = user['userId']
   )
+
+@quiz_bp.route("/api/quiz_solved", methods=['POST'])
+def update_db_after_quiz_solved() :
+   solverId = request.form.get("_solverId")
+   targetId = request.form.get("_targetId")
+
+   db.users.update_one(
+      {'userId':solverId}, 
+      {
+        "$addToSet": {"usersISolved": targetId},
+        "$inc": {"usersISolvedCount" : 1}
+      }
+    )
+   db.users.update_one(
+      {'userId':targetId}, 
+      {
+        "$set": {"userWhoSolvedMe" : solverId},
+        "$inc": {"userWhoSolvedMeCount": 1}
+      }
+   )
+
+   return jsonify({"result" : "success"})

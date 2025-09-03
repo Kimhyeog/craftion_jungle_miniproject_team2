@@ -12,6 +12,16 @@ document.addEventListener("DOMContentLoaded", () => {
         { // 맞추면 이제 안보이게 해야하는데 이걸 어떻게 할지 
             modalTitle.textContent = "🎉 정답입니다!";
             modalMessage.innerHTML = `${correctName}님을 맞추셨습니다!<br>두 분은 식사를 합시다!!`;
+            $.get('/user/api/me', function (me) {
+                if (me.result !== 'success') 
+                    return (location.href = '/auth/login');
+
+                // 2) 정답 기록
+                $.post('/quiz/api/quiz_solved', {
+                    _targetId: targetId,     // 전역에서 주입되어 있어야 함
+                    _solverId: me.userId
+                });
+            });
         }
         else
         {
