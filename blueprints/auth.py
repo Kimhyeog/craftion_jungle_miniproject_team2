@@ -12,6 +12,9 @@ def signup_page():
     # POST 요청은 회원가입 폼을 제출했을 때 들어옵니다.
     if request.method == 'POST':
         # 1. signup.html의 form에서 보낸 데이터를 받습니다.
+        userId = request.form.get('userId')
+        password = request.form.get('password')
+
         username = request.form.get('userName')
         nickname = request.form.get('nickName')
         hobby = request.form.get('hobby')
@@ -24,6 +27,8 @@ def signup_page():
 
         # 2. 받아온 데이터들을 딕셔너리 형태로 가공합니다.
         doc = {
+            'userId' : userId,
+            'password' : password,
             'userName': username,
             'quizInfo': {
                 'nickName': nickname,
