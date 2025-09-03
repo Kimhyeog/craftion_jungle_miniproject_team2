@@ -44,7 +44,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
           사진을 업로드 해주세요
         </label>
 
-        <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" />
+        <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" required/>
 
         <!-- 크롭 모달 -->
         <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
@@ -200,6 +200,20 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
     </div>
   <script src="https://unpkg.com/lucide@latest"></script>
 </form>
+
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-[400px] text-center">
+    <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
+    <p id="modal-message" class="text-gray-600 mb-6"></p>
+    <button 
+      id="close-modal" 
+      class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+    >
+      닫기
+    </button>
+  </div>
+</div>
+
 {% endblock %}
 {% block scripts %}
 <link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
