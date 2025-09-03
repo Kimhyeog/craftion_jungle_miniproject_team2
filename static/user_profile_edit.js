@@ -1,3 +1,21 @@
+function  showModal(title, message) 
+{
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalMessage = document.getElementById("modal-message");
+  const closeBtn = document.getElementById("close-modal");
+
+  modalTitle.textContent = title;
+  modalMessage.textContent = message;
+
+  modal.classList.remove("hidden");
+
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     // 1) 내 정보 불러와서 프리필
     try {
@@ -26,10 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
       const res = await fetch(form.action, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.result === 'success') {
-        alert('수정이 완료되었습니다.');
-        location.href = '/user/profile';
+        showModal("수정 완료", "수정이 완료되었습니다. 메인 페이지로 이동합니다");
+        setTimeout(() => {
+          window.location.href = '/quiz/list';
+        }, 2000)
       } else {
-        alert(data.msg || '수정 중 오류가 발생했습니다.');
+        showModal("에러", data.msg || '수정 중 오류가 발생했습니다.');
       }
     });
   });
