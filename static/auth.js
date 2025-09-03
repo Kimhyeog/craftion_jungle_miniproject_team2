@@ -94,8 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
             // [가장 중요한 수정]
             // 서버가 알려준 ID를 URL에 꼬리표로 붙여서 이동합니다.
             // 예: /?id=68b71902c2592ccd641f586b
-            const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
-            window.location.href = destinationUrl;
 
           } else {
             // 실패 시

@@ -82,7 +82,7 @@ def login_page():
                 'result': 'success',
                 'msg': '로그인에 성공했습니다!',
                 'redirect_url': main_page_url, # <--- 여기에 쉼표(,)를 추가했습니다.
-                'user_db_id': str(user['_id'])   # 사용자의 고유 DB ID를 함께 전달합니다.
+                'userId': user.get('userId')
             })
         else:
             # 5. 로그인 실패 시 (아이디가 없거나, 비밀번호가 틀리면)
