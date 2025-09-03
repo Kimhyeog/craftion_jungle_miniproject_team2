@@ -6,6 +6,33 @@
     <p class="text-gray-600">다른 유저들의 프로필을 확인해보세요!</p>
   </div>
   
+  <!-- 검색창 UI -->
+  <div class="mb-6">
+    <div class="max-w-md mx-auto">
+      <div class="relative">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="닉네임, 소개, MBTI, 관심사로 검색..."
+          value="{{ search_keyword or '' }}"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        >
+        <!-- <button 
+          id="searchBtn"
+          class="absolute right-2 top-2 text-gray-400 hover:text-gray-600"
+        >
+          🔍
+        </button> -->
+      </div>
+    </div>
+  </div>
+  
+  <!-- 검색 결과 없음 메시지 -->
+  <div id="noResults" class="text-center py-8 hidden">
+    <div class="text-4xl mb-2">🔍</div>
+    <p class="text-gray-600">검색 결과가 없습니다.</p>
+  </div>
+
   <!-- 유저 카드 그리드 -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {% for user in users %}
@@ -21,17 +48,17 @@
       <!-- 카드 내용 -->
       <div class="p-4">
         <!-- 닉네임 -->
-        <h3 class="text-xl font-bold text-gray-800 mb-2">{{ user.quizInfo.nickName }}</h3>
+        <h3 class="text-xl font-bold text-gray-800 mb-2" data-search="nickname">{{ user.quizInfo.nickName }}</h3>
         
         <!-- 한 줄 소개 -->
         {% if user.quizInfo.selfIntro %}
-        <p class="text-gray-600 text-sm mb-3 line-clamp-2">{{ user.quizInfo.selfIntro }}</p>
+        <p class="text-gray-600 text-sm mb-3 line-clamp-2" data-search="intro">{{ user.quizInfo.selfIntro }}</p>
         {% endif %}
         
         <!-- MBTI -->
         {% if user.quizInfo.mbti %}
         <div class="flex items-center mb-2">
-          <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full">
+          <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full" data-search="mbti">
             {{ user.quizInfo.mbti }}
           </span>
         </div>
@@ -40,16 +67,16 @@
         <!-- 관심사 -->
         <div class="flex flex-wrap gap-1 mb-3">
           {% if user.quizInfo.favoriteFood %}
-          <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded">🍽️ {{ user.quizInfo.favoriteFood }}</span>
+          <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded" data-search="food">🍽️ {{ user.quizInfo.favoriteFood }}</span>
           {% endif %}
           {% if user.quizInfo.hobby %}
-          <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded">🎨 {{ user.quizInfo.hobby }}</span>
+          <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded" data-search="hobby">🎨 {{ user.quizInfo.hobby }}</span>
           {% endif %}
         </div>
         
         <!-- 동기 -->
         {% if user.quizInfo.selfMotive %}
-        <p class="text-gray-500 text-xs italic">"{{ user.quizInfo.selfMotive }}"</p>
+        <p class="text-gray-500 text-xs italic" data-search="motive">"{{ user.quizInfo.selfMotive }}"</p>
         {% endif %}
       </div>
     </div>
@@ -60,18 +87,31 @@
   {% if not users %}
   <div class="text-center py-12">
     <div class="text-6xl mb-4">😔</div>
-    <h3 class="text-xl font-semibold text-gray-700 mb-2">아직 등록된 유저가 없습니다</h3>
-    <p class="text-gray-500">첫 번째 유저가 되어보세요!</p>
+    <h3 class="text-xl font-semibold text-gray-700 mb-2">
+      {% if search_keyword %}
+      "{{ search_keyword }}"에 대한 검색 결과가 없습니다
+      {% else %}
+      아직 등록된 유저가 없습니다
+      {% endif %}
+    </h3>
+    <p class="text-gray-500">
+      {% if search_keyword %}
+      다른 키워드로 검색해보세요.
+      {% else %}
+      첫 번째 유저가 되어보세요!
+      {% endif %}
+    </p>
   </div>
   {% endif %}
 </section>
 
-<!-- 카드 클릭 시 이동할 페이지를 위한 JavaScript -->
+
 <script>
+
 document.addEventListener('DOMContentLoaded', function() {
+  
   // 모든 유저 카드에 클릭 이벤트 추가
   const userCards = document.querySelectorAll('.user-card');
-  
   userCards.forEach(card => {
     card.addEventListener('click', function() {
       const userId = this.getAttribute('data-user-id');
@@ -79,7 +119,57 @@ document.addEventListener('DOMContentLoaded', function() {
       window.location.href = `/user/profile/${userId}`;
     });
   });
+  
+  // 실시간 검색 기능
+  const searchInput = document.getElementById('searchInput');
+  searchInput.addEventListener('input', function() {
+    const keyword = this.value.toLowerCase().trim();
+    filterCards(keyword);
+  });
 });
+
+// 카드 필터링 함수
+function filterCards(keyword) {
+  const cards = document.querySelectorAll('.user-card');
+  let visibleCount = 0;
+  
+  cards.forEach(card => {
+    // data-search 속성을 가진 모든 요소들 찾기
+    const searchableElements = card.querySelectorAll('[data-search]');
+    let searchableText = '';
+    
+    // 각 검색 가능한 요소의 텍스트를 수집
+    searchableElements.forEach(element => {
+      searchableText += element.textContent.toLowerCase() + ' ';
+    });
+    
+    // 검색어가 비어있거나 포함되어 있으면 표시
+    if (keyword === '' || searchableText.includes(keyword)) {
+      card.style.display = 'block';
+      visibleCount++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+  
+  // 검색 결과가 없을 때 메시지 표시
+  updateNoResultsMessage(keyword, visibleCount);
+}
+
+// 검색 결과 없음 메시지 업데이트
+function updateNoResultsMessage(keyword, visibleCount) {
+  const noResultsDiv = document.getElementById('noResults');
+  
+  if (keyword && visibleCount === 0) {
+    noResultsDiv.style.display = 'block';
+    noResultsDiv.innerHTML = `
+      <div class="text-4xl mb-2">🔍</div>
+      <p class="text-gray-600">"${keyword}"에 대한 검색 결과가 없습니다.</p>
+    `;
+  } else {
+    noResultsDiv.style.display = 'none';
+  }
+}
 </script>
 
 <style>
