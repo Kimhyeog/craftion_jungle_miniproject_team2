@@ -9,7 +9,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
-
 # 'auth' 라는 이름의 Blueprint를 생성합니다.
 auth_bp = Blueprint('auth', __name__)
 
@@ -30,57 +29,62 @@ def allowed_picture_type(fileName):
 # 회원 가입 api 라우터
 @auth_bp.route("/signup", methods=['GET', 'POST'])
 def signup_page():
-    # POST 요청은 회원가입 폼을 제출했을 때 들어옵니다.
     if request.method == 'POST':
-
-        # 1. signup.html의 form에서 보낸 데이터를 받습니다.
         userId = request.form.get('userId')
         password = request.form.get('password')
         username = request.form.get('userName')
         nickname = request.form.get('nickName')
+        # ... (나머지 form 데이터들)
         hobby = request.form.get('hobby')
         mbti = request.form.get('mbti')
         one_line_intro = request.form.get('oneLineIntro')
         motivate = request.form.get('motivate')
         favorite_food = request.form.get('favoriteFood')
 
+        # ▼▼▼ [수정 1] 필수 입력값 확인 ▼▼▼
+        if not all([userId, password, username, nickname]):
+            return jsonify({'result': 'error', 'msg': '필수 입력 항목이 누락되었습니다.'}), 400
+
+        # ▼▼▼ [수정 2] ID 중복 시 명확한 에러 메시지 반환 ▼▼▼
         if db.users.find_one({"userId": userId}):
-            return render_template("auth/signup.html")
+            return jsonify({'result': 'error', 'msg': '이미 사용 중인 아이디입니다.'}), 409
 
-        # 비밀번호를 해싱(암호화)합니다.
         password_hash = generate_password_hash(password)
-        profile_photo_filename = None
+        profile_photo_url = None # 기본값은 None (사진 없음)
 
-        # ------------- 박예린 추가 부분---------------- 
+        # ▼▼▼ [수정 3] 파일 처리 로직 개선 ▼▼▼
         file = request.files.get('profileImage')
         
-        if file.filename == '':
-            return '선택된 파일이 없습니다', 400
-    
-        if not allowed_picture_type(file.filename):
-            return '허용되지 않는 파일 유형입니다.(jpg, jpeg, png만 가능)', 400
+        # 파일이 존재하고, 파일 이름이 있는 경우에만 처리
+        if file and file.filename != '':
+            if not allowed_picture_type(file.filename):
+                return jsonify({'result': 'error', 'msg': '허용되지 않는 파일 형식입니다. (jpg, jpeg, png)'}), 400
 
-        if not os.path.exists(UPLOAD_FOLDER) :
-            os.makedirs(UPLOAD_FOLDER)
+            if not os.path.exists(UPLOAD_FOLDER):
+                os.makedirs(UPLOAD_FOLDER)
 
-        filename = secure_filename(file.filename)
-        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
-        saved_filename = f"{timestamp}_{filename}"
-        saved_path = os.path.join(UPLOAD_FOLDER, saved_filename)
-        file.save(saved_path)
+            filename = secure_filename(file.filename)
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            saved_filename = f"{timestamp}_{filename}"
+            
+            # DB에 저장할 경로를 URL 친화적인 형태로 생성
+            # Windows에서도 / 를 사용하도록 보장
+            saved_path_for_db = os.path.join(UPLOAD_FOLDER, saved_filename).replace("\\", "/")
+            
+            # 실제 파일 저장 시에는 OS에 맞는 경로 사용
+            server_save_path = os.path.join(UPLOAD_FOLDER, saved_filename)
+            file.save(server_save_path)
 
-        profile_photo_filename = saved_path
-
+            profile_photo_url = saved_path_for_db
         # ------------------------------------------
 
-        # 2. DB에 저장할 document를 만듭니다.
         doc = {
             'userId' : userId,
-            'password' : password_hash, # 암호화된 비밀번호를 저장합니다.
+            'password' : password_hash,
             'userName': username,
             'quizInfo': {
                 'nickName': nickname,
-                'profilePhoto': profile_photo_filename,
+                'profilePhoto': profile_photo_url, # 수정된 경로 변수 사용
                 'selfIntro': one_line_intro,
                 'selfMotive': motivate,
                 'favoriteFood': favorite_food,
@@ -93,10 +97,8 @@ def signup_page():
             'usersISolvedCount': 0
         }
         
-        # 3. 'users' 컬렉션에 문서를 삽입합니다.
         db.users.insert_one(doc)
         
-        # 4. 성공 신호를 JavaScript에게 보냅니다.
         login_url = url_for('auth.login_page')
         return jsonify({
             'result': 'success',
@@ -104,7 +106,6 @@ def signup_page():
             'redirect_url': login_url
         })
 
-    # GET 요청 시에는 회원가입 페이지만 보여줍니다.
     return render_template("auth/signup.html")
 
 
