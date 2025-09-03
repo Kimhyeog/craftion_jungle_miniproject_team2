@@ -2,14 +2,13 @@
 {% block content %}
 <section
 id="mypage-section"
-data-userid="{{ user_db_id }}" 
 class="min-h-screen bg-gradient-to-br from-green-50 to-white flex flex-col space-y-4 items-center justify-center p-4"> 
 <!-- 예린 section class에 flex-col space-y-4 추가함  -->
         <!-- 내 정보 카드 -->
   <div class="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md">
     <div class="flex justify-between items-center mb-4 border-b pb-2">
         <h2 class="text-2xl font-bold text-gray-800">내 정보</h2>
-        <a href="/user/profile/edit?id={{ user_db_id }}" class="px-4 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors">
+        <a href="/user/profile/edit" class="px-4 py-2 bg-green-600 text-white rounded text-sm font-medium hover:bg-green-700 transition-colors">
             정보 수정
         </a>
     </div>

@@ -4,36 +4,25 @@ $(document).ready(function() {
     make_profile_page()
 });
 
-// 정보 요청 다 하는 큰 틀에서의 함수
-function    make_profile_page() {
-// [수정] 하드코딩된 ID 대신, HTML의 data-userid 속성에서 ID를 가져옵니다.
-    // 1. HTML에서 사용자 ID를 가져온다.    
-    const userId = '1'; //userId는 JWT 토큰에서 가져온다 
-
-    // 2. 만약 ID가 없다면?
-    if (!db_id) {
-       // 여기서 함수가 중단(return)되어 버린다!
-        alert("사용자 정보를 불러올 수 없습니다. URL에 ID가 포함되어 있는지 확인하세요.");
-        return;
-    }
-
+// 정보 요청 다 하는 큰 틀에서의 함수 (JWT 기반 현재 사용자)
+function make_profile_page() {
     $.ajax({
         type: "GET",
-        // [수정] url 주소 앞에 '/user'를 추가합니다.
-        url: `/user/api/users/${userId}`, // [수정] /user 접두사 추가,
+        url: `/user/api/me`,
         success: function (response) {
-            if (response['result'] == 'success') {
-                
-                // 성공 시, 각 섹션에 정보를 채워넣는 함수들을 호출합니다.
+            if (response['result'] === 'success') {
                 display_myinfo(response);
                 display_solver_info(response);
                 display_my_solved_targets_info(response);
+            } else {
+                alert(response.msg || '로그인이 필요합니다.');
+                window.location.href = '/auth/login';
             }
-            error: ()=>alert("서버와 통신 중 오류가 발생했습니다.");
-        
+        },
+        error: function () {
+            alert('서버와 통신 중 오류가 발생했습니다.');
         }
     });
-
 }
 
 // 나의 정보 요청하는 함수 
