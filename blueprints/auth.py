@@ -1,5 +1,7 @@
 # jsonify, check_password_hash를 추가로 import 합니다.
 from flask import Blueprint, render_template, request, url_for, jsonify
+from datetime import datetime, timedelta, timezone
+import jwt
 from database import db
 # werkzeug는 비밀번호를 안전하게 해싱(암호화)하기 위해 사용합니다.
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -10,7 +12,10 @@ import os
 # 'auth' 라는 이름의 Blueprint를 생성합니다.
 auth_bp = Blueprint('auth', __name__)
 
-# ------ 박예린 추가 부분 --------------------------
+# JWT 시크릿 키 (프로덕션에서는 환경변수/설정으로 관리)
+SECRET_KEY = "your-secret-key-here-change-this-in-production"
+
+
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
 
@@ -19,7 +24,7 @@ def allowed_picture_type(fileName):
         return False
     ext = fileName.rsplit('.', 1)[1].lower()
     return ext in ALLOWED_EXTENSIONS
-#------------------------------------------------
+
 
 # 회원 가입 api 라우터
 @auth_bp.route("/signup", methods=['GET', 'POST'])
@@ -112,14 +117,28 @@ def login_page():
 
         # 3. 사용자가 존재하고, 비밀번호도 일치하는지 확인합니다.
         if user and check_password_hash(user['password'], password):
-            # 4. 로그인 성공 시, JS에게 보낼 데이터를 만듭니다.
+            # 4. 로그인 성공: JWT 발급 (14일 만료)
+            exp = datetime.now(timezone.utc) + timedelta(days=14)
+            payload = {"id": userId, "exp": exp}
+            token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
+
+            # 5. 응답(JSON) + HttpOnly 쿠키 설정
             main_page_url = url_for('main_page')
-            return jsonify({
+            resp = jsonify({
                 'result': 'success',
                 'msg': '로그인에 성공했습니다!',
-                'redirect_url': main_page_url, # <--- 여기에 쉼표(,)를 추가했습니다.
-                'user_db_id': str(user['_id'])   # 사용자의 고유 DB ID를 함께 전달합니다.
+                'redirect_url': main_page_url,
+                'userId': user.get('userId'),
+                'token': token,
             })
+            resp.set_cookie(
+                "mytoken",
+                token,
+                httponly=True,
+                samesite="Lax",
+                secure=False  # HTTPS 환경이면 True 권장
+            )
+            return resp
         else:
             # 5. 로그인 실패 시 (아이디가 없거나, 비밀번호가 틀리면)
             return jsonify({
