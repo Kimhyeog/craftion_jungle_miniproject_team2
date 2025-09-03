@@ -5,12 +5,25 @@ import jwt
 from database import db
 # werkzeug는 비밀번호를 안전하게 해싱(암호화)하기 위해 사용합니다.
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
+from datetime import datetime
+import os
 
 # 'auth' 라는 이름의 Blueprint를 생성합니다.
 auth_bp = Blueprint('auth', __name__)
 
 # JWT 시크릿 키 (프로덕션에서는 환경변수/설정으로 관리)
 SECRET_KEY = "your-secret-key-here-change-this-in-production"
+
+
+UPLOAD_FOLDER = 'static/uploads'
+ALLOWED_EXTENSIONS = {'jpg', 'jpeg', 'png'}
+
+def allowed_picture_type(fileName):
+    if '.' not in fileName:
+        return False
+    ext = fileName.rsplit('.', 1)[1].lower()
+    return ext in ALLOWED_EXTENSIONS
 
 
 # 회원 가입 api 라우터
@@ -32,6 +45,29 @@ def signup_page():
         # 비밀번호를 해싱(암호화)합니다.
         password_hash = generate_password_hash(password)
         profile_photo_filename = None
+
+        # ------------- 박예린 추가 부분---------------- 
+        file = request.files.get('profileImage')
+        
+        if file.filename == '':
+            return '선택된 파일이 없습니다', 400
+    
+        if not allowed_picture_type(file.filename):
+            return '허용되지 않는 파일 유형입니다.(jpg, jpeg, png만 가능)', 400
+
+        if not os.path.exists(UPLOAD_FOLDER) :
+            os.makedirs(UPLOAD_FOLDER)
+
+        filename = secure_filename(file.filename)
+        timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        saved_filename = f"{timestamp}_{filename}"
+        saved_path = os.path.join(UPLOAD_FOLDER, saved_filename)
+        file.save(saved_path)
+
+        profile_photo_filename = saved_path
+
+        # ------------------------------------------
+
 
         # 2. DB에 저장할 document를 만듭니다.
         doc = {

@@ -12,7 +12,7 @@
     <!-- 'auth.signup_page'로 수정 -->
     <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-emerald-600 text-white hover:bg-emerald-700" href="{{ url_for('auth.signup_page') }}">회원가입</a>
     <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-slate-700 text-white hover:bg-slate-800" href="{{ url_for('user_profile.make_profile') }}">마이페이지</a>
-    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-violet-600 text-white hover:bg-violet-700" href="{{ url_for('quiz_list') }}">퀴즈 목록</a>
+    <a class="btn inline-flex items-center gap-2 px-4 py-2 rounded-md bg-violet-600 text-white hover:bg-violet-700" href="{{ url_for('quiz.quiz_list') }}">퀴즈 목록</a>
   </nav>
 
   <section class="grid gap-6 md:grid-cols-2">
@@ -32,7 +32,7 @@
         <!-- 'auth.signup_page'로 수정 -->
         <li><a class="text-blue-600 hover:underline" href="{{ url_for('auth.signup_page') }}">회원가입 페이지</a></li>
         <li><a class="text-blue-600 hover:underline" href="{{ url_for('user_profile.make_profile') }}">마이페이지</a></li>
-        <li><a class="text-blue-600 hover:underline" href="{{ url_for('quiz_list') }}">퀴즈 목록</a></li>
+        <li><a class="text-blue-600 hover:underline" href="{{ url_for('quiz.quiz_list') }}">퀴즈 목록</a></li>
       </ul>
     </aside>
   </section>
