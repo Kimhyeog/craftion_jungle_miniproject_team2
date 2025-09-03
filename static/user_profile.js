@@ -25,10 +25,36 @@ function make_profile_page() {
     });
 }
 
-// 나의 정보 요청하는 함수 
+// 나의 정보 요청하는 함수 (보완된 버전)
 function display_myinfo(user) {
+    // ▼▼▼ [보완] 프로필 사진 URL 처리 로직 강화 ▼▼▼
+    let profilePhotoUrl;
+    const defaultPhoto = '/static/images/default_profile.png'; // 기본 이미지 경로
+
+    // user.profilePhoto 값이 존재하는지 먼저 확인
+    if (user.profilePhoto) {
+        const path = user.profilePhoto;
+
+        // 1. 절대 경로(http/https로 시작)이면 그대로 사용
+        // 2. 루트 상대 경로(/로 시작)이면 그대로 사용
+        // 3. 둘 다 아니면(예: 'static/uploads/...'), 앞에 '/'를 붙여 루트 상대 경로로 만들어줌
+        profilePhotoUrl = /^https?:\/\//.test(path) ? path : (path.startsWith('/') ? path : `/${path}`);
+    } else {
+        // 프로필 사진 정보가 없으면 기본 이미지 사용
+        profilePhotoUrl = defaultPhoto;
+    }
+
+    // onerror 이벤트를 추가하여 URL이 잘못되었을 경우에도 기본 이미지로 대체
+    $('#profile-img')
+        .attr('src', profilePhotoUrl)
+        .on('error', function() {
+            $(this).attr('src', defaultPhoto);
+        });
+    // ▲▲▲ [보완] 프로필 사진 설정 완료 ▲▲▲
+
+
     const my_info_html = `
-        <li class="flex justify-between"><strong>닉네임:</strong> <span>${user.nickName}</span></li>
+        <li class="flex justify-between"><strong>닉임:</strong> <span>${user.nickName}</span></li>
         <li class="flex justify-between"><strong>MBTI:</strong> <span>${user.mbti}</span></li>
         <li class="flex justify-between"><strong>취미:</strong> <span>${user.hobby}</span></li>
         <li class="flex justify-between"><strong>좋아하는 음식:</strong> <span>${user.favoriteFood}</span></li>

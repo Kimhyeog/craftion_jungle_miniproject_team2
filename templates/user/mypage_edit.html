@@ -12,7 +12,43 @@
       <!-- 기본 정보 -->
       <div class="space-y-4">
         <h2 class="text-lg font-semibold text-slate-900">기본 정보</h2>
+        <div class="flex flex-col gap-3 items-center justify-center mb-4">
+          <img id="profile-img" src="" alt="프로필 사진" class="w-24 h-24 rounded-full object-cover border-2 border-green-200">
+        <!-- 사진 업로드 박스 -->
+        <label for="file-upload" class="flex h-9 min-w-0 cursor-pointer items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground hover:bg-slate-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30 dark:hover:bg-slate-800 dark:aria-invalid:ring-destructive/40 md:text-sm">
+          사진 수정
+        </label>
+
+        <!-- 크롭 모달 -->
+        <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+          <div class="w-full max-w-xl rounded-xl bg-white shadow-lg">
+            <div class="flex items-center justify-between border-b px-4 py-3">
+              <h3 class="text-lg font-semibold">이미지 자르기</h3>
+              <button id="cropper-close" type="button" class="text-slate-500 hover:text-slate-700">닫기</button>
+            </div>
+            <div class="p-4">
+              <div class="w-full">
+                <img id="cropper-image" class="max-h-[60vh] w-full object-contain" alt="crop source" />
+              </div>
+              <!-- 원형 미리보기 -->
+              <div class="flex items-center justify-center">
+                <div class="w-28 h-28 rounded-full overflow-hidden border">
+                  <div id="cropper-preview" class="w-28 h-28"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t px-4 py-3">
+              <button id="cropper-cancel" type="button" class="inline-flex h-9 items-center rounded-md border border-slate-300 px-4 text-slate-700 hover:bg-slate-50">취소</button>
+              <button id="cropper-apply" type="button" class="inline-flex h-9 items-center rounded-md bg-green-600 px-4 font-medium text-white hover:bg-green-700">적용</button>
+            </div>
+          </div>
+        </div>
+
+        <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" required/>
+
+        </div>
       <div class="space-y-2">
+      
         <label for="nickName" class="text-sm font-medium text-slate-700">닉네임</label>
         <input id="nickName" name="nickName" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
         <p class="text-xs text-gray-500">서비스에서 보여질 이름입니다.</p>
@@ -62,4 +98,8 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='user_profile_edit.js') }}"></script>
+<link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='image_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='user_profile.js') }}"></script>
 {% endblock %}
