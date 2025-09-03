@@ -8,7 +8,7 @@ $(document).ready(function() {
 function    make_profile_page() {
 // [수정] 하드코딩된 ID 대신, HTML의 data-userid 속성에서 ID를 가져옵니다.
     // 1. HTML에서 사용자 ID를 가져온다.    
-    const db_id = $('#mypage-section').data('userid');
+    const userId = '1'; //userId는 JWT 토큰에서 가져온다 
 
     // 2. 만약 ID가 없다면?
     if (!db_id) {
@@ -20,7 +20,7 @@ function    make_profile_page() {
     $.ajax({
         type: "GET",
         // [수정] url 주소 앞에 '/user'를 추가합니다.
-        url: `/user/api/users/${db_id}`, // [수정] /user 접두사 추가,
+        url: `/user/api/users/${userId}`, // [수정] /user 접두사 추가,
         success: function (response) {
             if (response['result'] == 'success') {
                 

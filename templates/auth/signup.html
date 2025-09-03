@@ -4,6 +4,7 @@
 <form 
 id="signup-form"
   method="post"
+  enctype="multipart/form-data"
   action="{{ url_for('auth.signup_page') }}"
 class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
   <div class="max-w-2xl mx-auto">
@@ -45,7 +46,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
             사진을 업로드 해주세요
           </label>
   
-        <input id="file-upload" type="file" class="sr-only" />
+        <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" />
       </div>
 
       <!-- 아이디 비번 기입 Box -->

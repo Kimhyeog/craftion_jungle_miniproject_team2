@@ -23,13 +23,14 @@ def make_profile():
     return render_template("user/mypage.html", user_db_id=user_id)
 
 
+#  db아이디 대신 userId로 변경 
 # --- get_user_info 함수를 좀 더 안전하게 수정합니다 (오류 방지) ---
-@profile_bp.route("/api/users/<string:db_id>", methods=['GET'])
-def get_user_info(db_id):
-    if not ObjectId.is_valid(db_id):
+@profile_bp.route("/api/users/<string:_userId>", methods=['GET'])
+def get_user_info(_userId):
+    if not ObjectId.is_valid(_userId):
         abort(400, description="Invalid user ID format")
 
-    user = db.users.find_one({'_id': ObjectId(db_id)})
+    user = db.users.find_one({'userId': _userId})
     
     if not user:
         return jsonify({'result': 'fail', 'msg': '사용자를 찾을 수 없습니다.'}), 404
