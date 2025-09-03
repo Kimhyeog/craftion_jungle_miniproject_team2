@@ -49,14 +49,16 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       </div>
 
       <!-- 아이디 비번 기입 Box -->
-      <div class="px-3 w-full grid grid-cols-2 gap-6">
+      <!-- 아이디/비밀번호 입력 -->
+      <div class="px-3 w-full grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6">
         <div class="space-y-2">
           <label for="userId" class="text-sm font-medium text-slate-700">아이디 *</label>
           <input
             id="userId"
             name="userId"
-            type="email"
-            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            type="text"
+            placeholder="your@email.com"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
             required />
         </div>
         <div class="space-y-2">
@@ -65,12 +67,11 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
             id="password"
             name="password"
             type="password"
-            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
             required />
         </div>
-
-        
       </div>
+      
 
       <!-- 개인 정보 기입 Box -->
        <div class="px-3 w-full grid grid-cols-2 gap-6">

@@ -23,12 +23,16 @@ def signup_page():
         motivate = request.form.get('motivate')
         favorite_food = request.form.get('favoriteFood')
         
+        # --- [중요] 비밀번호 해싱 ---
+        # werkzeug 라이브러리를 사용해 비밀번호를 암호화합니다.
+        password_hash = generate_password_hash(password)
+
         profile_photo_filename = None
 
         # 2. 받아온 데이터들을 딕셔너리 형태로 가공합니다.
         doc = {
             'userId' : userId,
-            'password' : password,
+            'password' : password_hash, # 암호화된 비밀번호를 저장합니다.
             'userName': username,
             'quizInfo': {
                 'nickName': nickname,
