@@ -96,37 +96,39 @@ def get_edit_page():
 
 @profile_bp.route("/profile/edit", methods=['POST'])
 def post_edit_info():
-    # 여기에 프로필 수정 로직을 구현하면 됩니다.
-    # 예: nickName = request.form['nickName']
-    #     db.users.update_one(...)
+    # JWT 인증
+    token = request.cookies.get('mytoken')
+    if not token:
+        return jsonify({'result': 'fail', 'msg': '로그인이 필요합니다.'}), 401
+
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        user_id = payload.get('id')
+    except jwt.ExpiredSignatureError:
+        return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'}), 401
+    except jwt.exceptions.DecodeError:
+        return jsonify({'result': 'fail', 'msg': '유효하지 않은 토큰입니다.'}), 401
+
+    # 폼 입력값 수집
+    nickName = request.form.get('nickName', '').strip()
+    hobby = request.form.get('hobby', '').strip()
+    mbti = request.form.get('mbti', '').strip()
+    oneLineIntro = request.form.get('oneLineIntro', '').strip()
+    motivate = request.form.get('motivate', '').strip()
+    favoriteFood = request.form.get('favoriteFood', '').strip()
+
+    # 업데이트 문서 구성
+    update_doc = {
+        'quizInfo.nickName': nickName,
+        'quizInfo.hobby': hobby,
+        'quizInfo.mbti': mbti,
+        'quizInfo.selfIntro': oneLineIntro,
+        'quizInfo.selfMotive': motivate,
+        'quizInfo.favoriteFood': favoriteFood,
+    }
+
+    result = db.users.update_one({'userId': user_id}, {'$set': update_doc})
+    if result.matched_count == 0:
+        return jsonify({'result': 'fail', 'msg': '사용자를 찾을 수 없습니다.'}), 404
+
     return jsonify({'result': 'success', 'msg': '수정이 완료되었습니다.'})
-
-# # 실제 접속 주소: '/user/api/users/<db_id>'
-# @profile_bp.route("/api/users/<string:db_id>", methods=['GET'])
-# def get_user_info(db_id):
-
-#     if not ObjectId.is_valid(db_id):
-#         abort(400, description="Invalid user ID format")
-
-#     # 공유된 db 객체를 사용하여 'users' 컬렉션에 쿼리합니다.
-#     user = db.users.find_one({'_id': ObjectId(db_id)})
-    
-#     if not user:
-#         abort(404, description="User not found")
-
-#     # 기존 로직과 동일
-#     return jsonify({
-#         'result': 'success',
-#         'userName': user['userName'],
-#         'nickName': user['quizInfo']['nickName'],
-#         'profilePhoto': user['quizInfo']['profilePhoto'],
-#         'selfIntro': user['quizInfo']['selfIntro'],
-#         'selfMotive': user['quizInfo']['selfMotive'],
-#         'favoriteFood': user['quizInfo']['favoriteFood'],
-#         'hobby': user['quizInfo']['hobby'],
-#         'mbti': user['quizInfo']['mbti'],
-#         'userWhoSolvedMe': user['userWhoSolvedMe'],
-#         'usersISolved': user['usersISolved'],
-#         'userWhoSolvedMeCount': user['userWhoSolvedMeCount'],
-#         'usersISolvedCount': user['usersISolvedCount']
-#     })

@@ -1,18 +1,87 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex flex-col space-y-4 items-center justify-center p-4"> 
-<!-- 예린 section class에 flex-col space-y-4 추가함  -->
-    
-    <input type="text" id="input-nickname"/>
-    <input type="text" id="input-selfintro" />
-    <input type="text" id="input-selfmotive" />
-    <input type="text" id="input-favoritefood" />
-    <input type="text" id="input-hobby" />
-    <input type="text" id="input-mbti" />
+<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
+  <div class="w-full max-w-xl bg-white p-6 rounded-lg shadow-md space-y-5">
+    <h1 class="text-2xl font-bold">프로필 수정</h1>
 
-
+    <form id="profile-edit-form" class="space-y-4" method="post" action="{{ url_for('user_profile.post_edit_info') }}">
+      <div class="space-y-2">
+        <label for="nickName" class="text-sm font-medium text-slate-700">닉네임</label>
+        <input id="nickName" name="nickName" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label for="hobby" class="text-sm font-medium text-slate-700">취미</label>
+          <input id="hobby" name="hobby" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+        </div>
+        <div class="space-y-2">
+          <label for="mbti" class="text-sm font-medium text-slate-700">MBTI</label>
+          <select id="mbti" name="mbti" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required>
+            <option value="" disabled selected>MBTI 선택</option>
+            <option value="ISTJ">ISTJ</option><option value="ISFJ">ISFJ</option><option value="INFJ">INFJ</option><option value="INTJ">INTJ</option>
+            <option value="ISTP">ISTP</option><option value="ISFP">ISFP</option><option value="INFP">INFP</option><option value="INTP">INTP</option>
+            <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option><option value="ENFP">ENFP</option><option value="ENTP">ENTP</option>
+            <option value="ESTJ">ESTJ</option><option value="ESFJ">ESFJ</option><option value="ENFJ">ENFJ</option><option value="ENTJ">ENTJ</option>
+          </select>
+        </div>
+      </div>
+      <div class="space-y-2">
+        <label for="oneLineIntro" class="text-sm font-medium text-slate-700">한 줄 소개</label>
+        <input id="oneLineIntro" name="oneLineIntro" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="space-y-2">
+        <label for="motivate" class="text-sm font-medium text-slate-700">지원 동기</label>
+        <input id="motivate" name="motivate" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="space-y-2">
+        <label for="favoriteFood" class="text-sm font-medium text-slate-700">좋아하는 음식</label>
+        <input id="favoriteFood" name="favoriteFood" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="pt-2">
+        <button type="submit" class="w-full h-10 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition-colors">수정하기</button>
+      </div>
+    </form>
+  </div>
 </section>
 
-<!-- <script src="{{ url_for('static', filename='user_profile.js') }}"></script> -->
+{% endblock %}
 
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  // 1) 내 정보 불러와서 프리필
+  try {
+    const meRes = await fetch('/user/api/me');
+    if (!meRes.ok) throw new Error('unauthorized');
+    const me = await meRes.json();
+    if (me.result !== 'success') throw new Error(me.msg || 'fail');
+    const f = document.getElementById('profile-edit-form');
+    f.nickName.value = me.nickName || '';
+    f.hobby.value = me.hobby || '';
+    f.mbti.value = me.mbti || '';
+    f.oneLineIntro.value = me.selfIntro || '';
+    f.motivate.value = me.selfMotive || '';
+    f.favoriteFood.value = me.favoriteFood || '';
+  } catch (e) {
+    alert('로그인이 필요합니다.');
+    location.href = '/auth/login';
+    return;
+  }
+
+  // 2) 제출 처리
+  const form = document.getElementById('profile-edit-form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const res = await fetch(form.action, { method: 'POST', body: formData });
+    const data = await res.json();
+    if (data.result === 'success') {
+      alert('수정이 완료되었습니다.');
+      location.href = '/user/profile';
+    } else {
+      alert(data.msg || '수정 중 오류가 발생했습니다.');
+    }
+  });
+});
+</script>
 {% endblock %}
