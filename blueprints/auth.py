@@ -32,6 +32,7 @@ def allowed_picture_type(fileName):
 def signup_page():
     # POST 요청은 회원가입 폼을 제출했을 때 들어옵니다.
     if request.method == 'POST':
+
         # 1. signup.html의 form에서 보낸 데이터를 받습니다.
         userId = request.form.get('userId')
         password = request.form.get('password')
@@ -42,7 +43,10 @@ def signup_page():
         one_line_intro = request.form.get('oneLineIntro')
         motivate = request.form.get('motivate')
         favorite_food = request.form.get('favoriteFood')
-        
+
+        if db.users.find_one({"userId": userId}):
+            return render_template("auth/signup.html")
+
         # 비밀번호를 해싱(암호화)합니다.
         password_hash = generate_password_hash(password)
         profile_photo_filename = None
@@ -68,7 +72,6 @@ def signup_page():
         profile_photo_filename = saved_path
 
         # ------------------------------------------
-
 
         # 2. DB에 저장할 document를 만듭니다.
         doc = {
