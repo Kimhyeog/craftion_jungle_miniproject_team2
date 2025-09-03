@@ -57,7 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
         .then((data) => {
           if (data.result === 'success') {
             alert('회원가입에 성공했습니다! 로그인 페이지로 이동합니다.');
-            window.location.href = data.redirect_url;
+
+            // [가장 중요한 수정]
+            // 서버가 알려준 ID를 URL에 꼬리표로 붙여서 이동합니다.
+            // 예: /?id=68b71902c2592ccd641f586b
+            // const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
+            // window.location.href = destinationUrl;
+            // window.location.href = data.redirect_url;
           } else {
             alert(data.msg || '회원가입 중 오류가 발생했습니다.');
           }
@@ -85,7 +91,12 @@ document.addEventListener('DOMContentLoaded', function () {
           if (data.result === 'success') {
             // 성공 시
             alert('로그인에 성공했습니다! 메인 페이지로 이동합니다.');
-            window.location.href = data.redirect_url; // 서버가 알려준 메인페이지로 이동
+            // [가장 중요한 수정]
+            // 서버가 알려준 ID를 URL에 꼬리표로 붙여서 이동합니다.
+            // 예: /?id=68b71902c2592ccd641f586b
+            const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
+            window.location.href = destinationUrl;
+
           } else {
             // 실패 시
             alert(data.msg); // 서버가 보내준 실패 메시지 보여주기
