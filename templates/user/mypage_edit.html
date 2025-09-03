@@ -1,18 +1,65 @@
 {% extends 'base.html' %}
+{% block header %}{% endblock %}
 {% block content %}
-<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex flex-col space-y-4 items-center justify-center p-4"> 
-<!-- 예린 section class에 flex-col space-y-4 추가함  -->
-    
-    <input type="text" id="input-nickname"/>
-    <input type="text" id="input-selfintro" />
-    <input type="text" id="input-selfmotive" />
-    <input type="text" id="input-favoritefood" />
-    <input type="text" id="input-hobby" />
-    <input type="text" id="input-mbti" />
+<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
+  <div class="w-full max-w-2xl bg-white p-6 rounded-xl shadow-sm border border-green-100 space-y-6">
+    <header class="space-y-1 text-center md:text-left">
+      <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-slate-900">프로필 수정</h1>
+      <p class="text-sm text-gray-600">회원가입 때 입력한 정보를 최신 상태로 업데이트하세요.</p>
+    </header>
 
-
+    <form id="profile-edit-form" class="space-y-6" method="post" action="{{ url_for('user_profile.post_edit_info') }}">
+      <!-- 기본 정보 -->
+      <div class="space-y-4">
+        <h2 class="text-lg font-semibold text-slate-900">기본 정보</h2>
+      <div class="space-y-2">
+        <label for="nickName" class="text-sm font-medium text-slate-700">닉네임</label>
+        <input id="nickName" name="nickName" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+        <p class="text-xs text-gray-500">서비스에서 보여질 이름입니다.</p>
+      </div>
+      </div>
+      <!-- 취미 · MBTI -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-2">
+          <label for="hobby" class="text-sm font-medium text-slate-700">취미</label>
+          <input id="hobby" name="hobby" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+        </div>
+        <div class="space-y-2">
+          <label for="mbti" class="text-sm font-medium text-slate-700">MBTI</label>
+          <select id="mbti" name="mbti" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required>
+            <option value="" disabled selected>MBTI 선택</option>
+            <option value="ISTJ">ISTJ</option><option value="ISFJ">ISFJ</option><option value="INFJ">INFJ</option><option value="INTJ">INTJ</option>
+            <option value="ISTP">ISTP</option><option value="ISFP">ISFP</option><option value="INFP">INFP</option><option value="INTP">INTP</option>
+            <option value="ESTP">ESTP</option><option value="ESFP">ESFP</option><option value="ENFP">ENFP</option><option value="ENTP">ENTP</option>
+            <option value="ESTJ">ESTJ</option><option value="ESFJ">ESFJ</option><option value="ENFJ">ENFJ</option><option value="ENTJ">ENTJ</option>
+          </select>
+        </div>
+      </div>
+      <!-- 소개 글 -->
+      <div class="space-y-2">
+        <label for="oneLineIntro" class="text-sm font-medium text-slate-700">한 줄 소개</label>
+        <input id="oneLineIntro" name="oneLineIntro" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+        <p class="text-xs text-gray-500">프로필 카드에 강조되어 표시됩니다.</p>
+      </div>
+      <!-- 기타 -->
+      <div class="space-y-2">
+        <label for="motivate" class="text-sm font-medium text-slate-700">지원 동기</label>
+        <input id="motivate" name="motivate" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="space-y-2">
+        <label for="favoriteFood" class="text-sm font-medium text-slate-700">좋아하는 음식</label>
+        <input id="favoriteFood" name="favoriteFood" type="text" class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50" required />
+      </div>
+      <div class="pt-2 flex gap-3">
+        <a href="/user/profile" class="inline-flex items-center justify-center h-10 px-4 rounded-md border border-slate-300 text-slate-700 hover:bg-slate-50 transition-colors w-1/2">취소</a>
+        <button type="submit" class="w-1/2 h-10 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition-colors">수정하기</button>
+      </div>
+    </form>
+  </div>
 </section>
 
-<!-- <script src="{{ url_for('static', filename='user_profile.js') }}"></script> -->
+{% endblock %}
 
+{% block scripts %}
+<script src="{{ url_for('static', filename='user_profile_edit.js') }}"></script>
 {% endblock %}

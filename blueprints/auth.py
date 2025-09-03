@@ -1,5 +1,6 @@
 # jsonify, check_password_hash를 추가로 import 합니다.
 from flask import Blueprint, render_template, request, url_for, jsonify
+from flask import make_response, redirect
 from datetime import datetime, timedelta, timezone
 import jwt
 from database import db
@@ -148,4 +149,11 @@ def login_page():
 
     # GET 요청 시에는 그냥 로그인 페이지만 보여줍니다.
     return render_template("auth/login.html")
+
+# 로그아웃: 쿠키 삭제 후 로그인 페이지로 이동
+@auth_bp.route("/logout", methods=['GET'])
+def logout():
+    resp = make_response(redirect(url_for('auth.login_page')))
+    resp.set_cookie("mytoken", "", expires=0)
+    return resp
 

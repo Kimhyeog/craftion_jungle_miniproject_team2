@@ -31,22 +31,45 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       <div class="w-full flex flex-col items-center justify-center gap-3 rounded-xl border border-green-100 bg-white py-6 px-6 text-slate-900 shadow-sm">
       
       <!-- 자식 Card Title -->
-        <div class="w-full flex items-start items-start gap-2  font-semibold text-lg" >
+      <div class="w-full flex items-start items-start gap-2  font-semibold text-lg" >
           <i data-lucide="camera" class="my-custom-icon"></i> 프로필 사진
         </div>
         <p class="w-full text-sm font-semibold text-[oklch(0.556_0_0)]">본인을 어필할 수 있는 소중한 사진 1개를 업로드해주세요</p>
-        <div class="w-32 h-32 mt-5 rounded-full border-2 border-dashed border-green-300 flex items-center justify-center bg-green-50">
-          <i data-lucide="upload" class="w-8 h-8 text-green-400"></i>
+        <div id="profile-preview-container" class="w-32 h-32 mt-5 rounded-full border-2 border-dashed border-green-300 flex items-center justify-center bg-green-50 overflow-hidden">
+          <img id="profile-preview-img" alt="preview" class="hidden w-full h-full object-cover" />
+          <i id="profile-preview-icon" data-lucide="upload" class="w-8 h-8 text-green-400"></i>
         </div>
         <!-- 사진 업로드 박스 -->
-                <label
-            for="file-upload"
-            class="flex h-9 min-w-0 cursor-pointer items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground hover:bg-slate-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30 dark:hover:bg-slate-800 dark:aria-invalid:ring-destructive/40 md:text-sm"
-          >
-            사진을 업로드 해주세요
-          </label>
-  
+        <label for="file-upload" class="flex h-9 min-w-0 cursor-pointer items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground hover:bg-slate-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30 dark:hover:bg-slate-800 dark:aria-invalid:ring-destructive/40 md:text-sm">
+          사진을 업로드 해주세요
+        </label>
+
         <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" />
+
+        <!-- 크롭 모달 -->
+        <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+          <div class="w-full max-w-xl rounded-xl bg-white shadow-lg">
+            <div class="flex items-center justify-between border-b px-4 py-3">
+              <h3 class="text-lg font-semibold">이미지 자르기</h3>
+              <button id="cropper-close" type="button" class="text-slate-500 hover:text-slate-700">닫기</button>
+            </div>
+            <div class="p-4 space-y-4">
+              <div class="w-full">
+                <img id="cropper-image" class="max-h-[60vh] w-full object-contain" alt="crop source" />
+              </div>
+              <!-- 원형 미리보기 -->
+              <div class="flex items-center justify-center">
+                <div class="w-28 h-28 rounded-full overflow-hidden border">
+                  <div id="cropper-preview" class="w-28 h-28"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t px-4 py-3">
+              <button id="cropper-cancel" type="button" class="inline-flex h-9 items-center rounded-md border border-slate-300 px-4 text-slate-700 hover:bg-slate-50">취소</button>
+              <button id="cropper-apply" type="button" class="inline-flex h-9 items-center rounded-md bg-green-600 px-4 font-medium text-white hover:bg-green-700">적용</button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- 아이디 비번 기입 Box -->
@@ -179,5 +202,8 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
 </form>
 {% endblock %}
 {% block scripts %}
+<link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='image_crop.js') }}"></script>
 <script src="{{ url_for('static', filename='auth.js') }}"></script>
 {% endblock %} <!-- scripts 블록 끝 <-- 이 줄을 추가하세요! -->
