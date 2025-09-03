@@ -112,8 +112,6 @@ document.addEventListener('DOMContentLoaded', function() {
     card.addEventListener('click', function() {
       const userId = this.getAttribute('data-user-id');
       if (userId) {
-        // [수정] /user/profile/ 이 아닌 퀴즈 대시보드로 연결해야 할 수 있습니다.
-        // 현재 코드에서는 /quiz/usr/ 로 연결하여 DB ID 기반의 대시보드로 리다이렉트합니다.
         window.location.href = `/quiz/usr/${userId}`;
       }
     });
