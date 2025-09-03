@@ -5,8 +5,24 @@ from flask import redirect, url_for
 from database import db
 from bson import ObjectId
 import math
+import jwt
 
 quiz_bp = Blueprint('quiz', __name__)
+
+# JWT 시크릿 키 (auth.py와 동일해야 함)
+SECRET_KEY = "your-secret-key-here-change-this-in-production"
+
+# JWT 토큰에서 userId 추출하는 함수
+def get_current_user_id():
+    token = request.cookies.get('mytoken')
+    if not token:
+        return None
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+        return payload.get('id')
+    except (jwt.ExpiredSignatureError, jwt.InvalidTokenError):
+        return None
 
 @quiz_bp.route("/list")
 def quiz_list():
@@ -32,12 +48,17 @@ def quiz_list():
             }
         ]
     
+    # userWhoSolvedMeCount가 0인 유저들만 추출
+    query['userWhoSolvedMeCount'] = 0
+    
+    # 현재 로그인한 사용자 제외
+    current_user_id = get_current_user_id()
+    if current_user_id:
+        query['userId'] = {'$ne': current_user_id}  # $ne는 "not equal"을 의미
+    
     total_users = db.users.count_documents(query)
     total_pages = math.ceil(total_users / limit)
     skip_count = (page - 1) * limit
-    
-    # userWhoSolvedMeCount가 0인 유저들만 추출
-    query['userWhoSolvedMeCount'] = 0
     
     users = list(db.users.find(query).skip(skip_count).limit(limit))
     
