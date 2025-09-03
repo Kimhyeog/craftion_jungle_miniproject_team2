@@ -2,10 +2,14 @@
 from flask import Flask, render_template, request, jsonify
 from pymongo import MongoClient
 
-from user_profile import profile_bp  # 프로필 페이지 blueprint 불러오기 
+from blueprints.user_profile import profile_bp  # 프로필 페이지 blueprint 불러오기 
+from blueprints.upload_picture import upload_bp
 
 app = Flask(__name__)
 app.register_blueprint(profile_bp)
+app.register_blueprint(upload_bp)
+
+app.config['MAX_CONTENT_LENGTH'] = 2 # 2MB
 
 
 client = MongoClient("mongodb://localhost:27017")  # 인증 비활성화 상태
