@@ -54,7 +54,7 @@ function display_myinfo(user) {
 
 
     const my_info_html = `
-        <li class="flex justify-between"><strong>닉임:</strong> <span>${user.nickName}</span></li>
+        <li class="flex justify-between"><strong>닉네임:</strong> <span>${user.nickName}</span></li>
         <li class="flex justify-between"><strong>MBTI:</strong> <span>${user.mbti}</span></li>
         <li class="flex justify-between"><strong>취미:</strong> <span>${user.hobby}</span></li>
         <li class="flex justify-between"><strong>좋아하는 음식:</strong> <span>${user.favoriteFood}</span></li>

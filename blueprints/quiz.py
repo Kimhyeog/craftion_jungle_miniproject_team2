@@ -36,6 +36,9 @@ def quiz_list():
     total_pages = math.ceil(total_users / limit)
     skip_count = (page - 1) * limit
     
+    # userWhoSolvedMeCount가 0인 유저들만 추출
+    query['userWhoSolvedMeCount'] = 0
+    
     users = list(db.users.find(query).skip(skip_count).limit(limit))
     
     # --- 디버깅을 위한 코드 ---
