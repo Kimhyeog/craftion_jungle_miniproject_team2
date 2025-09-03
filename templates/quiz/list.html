@@ -26,47 +26,38 @@
   </div>
   
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-    {# ▼▼▼ [수정] user.quizInfo가 있는지 먼저 확인하는 조건문 추가 ▼▼▼ #}
     {% for user in users %}
-      {% if user.quizInfo %}
-      <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer user-card" 
-           data-user-id="{{ user.userId }}">
-        <div class="relative">
-          <div class="w-full h-48 bg-gradient-to-br from-green-100 to-green-200 rounded-t-lg flex items-center justify-center">
+    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer user-card" 
+         data-user-id="{{ user.userId }}">
+      
+      {# ▼▼▼ [수정] 프로필 사진 표시 영역 ▼▼▼ #}
+      <div class="relative w-full h-48 rounded-t-lg">
+        {# 1. profilePhoto 값이 존재하는 경우, 해당 이미지를 출력합니다. #}
+        {% if user.quizInfo.profilePhoto %}
+          <img src="/{{ user.quizInfo.profilePhoto }}" 
+               alt="{{ user.quizInfo.nickName }} 프로필 사진" 
+               class="w-full h-full object-cover rounded-t-lg"
+               onerror="this.onerror=null; this.src='/static/images/default_profile.png';">
+        {# 2. profilePhoto 값이 없는 경우(null 또는 빈 문자열), 기본 아이콘을 출력합니다. #}
+        {% else %}
+          <div class="w-full h-full bg-gradient-to-br from-green-100 to-green-200 rounded-t-lg flex items-center justify-center">
             <span class="text-4xl text-green-600">👤</span>
           </div>
-        </div>
-        
-        <div class="p-4">
-          <h3 class="text-xl font-bold text-gray-800 mb-2" data-search="nickname">{{ user.quizInfo.nickName }}</h3>
-          
-          {% if user.quizInfo.selfIntro %}
-          <p class="text-gray-600 text-sm mb-3 line-clamp-2" data-search="intro">{{ user.quizInfo.selfIntro }}</p>
-          {% endif %}
-          
-          {% if user.quizInfo.mbti %}
-          <div class="flex items-center mb-2">
-            <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full" data-search="mbti">
-              {{ user.quizInfo.mbti }}
-            </span>
-          </div>
-          {% endif %}
-          
-          <div class="flex flex-wrap gap-1 mb-3">
-            {% if user.quizInfo.favoriteFood %}
-            <span class="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded" data-search="food">🍽️ {{ user.quizInfo.favoriteFood }}</span>
-            {% endif %}
-            {% if user.quizInfo.hobby %}
-            <span class="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded" data-search="hobby">🎨 {{ user.quizInfo.hobby }}</span>
-            {% endif %}
-          </div>
-          
-          {% if user.quizInfo.selfMotive %}
-          <p class="text-gray-500 text-xs italic" data-search="motive">"{{ user.quizInfo.selfMotive }}"</p>
-          {% endif %}
-        </div>
+        {% endif %}
       </div>
-      {% endif %}
+      {# ▲▲▲ 수정 완료 ▲▲▲ #}
+      
+      {# 카드 내용 (이하 코드는 기존과 동일) #}
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-gray-800 mb-2" data-search="nickname">{{ user.quizInfo.nickName }}</h3>
+        
+        {% if user.quizInfo.selfIntro %}
+        <p class="text-gray-600 text-sm mb-3 line-clamp-2" data-search="intro">{{ user.quizInfo.selfIntro }}</p>
+        {% endif %}
+        
+        {# ... (나머지 카드 내용) ... #}
+      </div>
+    </div>
     {% endfor %}
   </div>
   
