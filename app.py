@@ -1,5 +1,5 @@
 # 필요한 라이브러리 import
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request, redirect
 from database import db
 
 # blueprints 폴더에 있는 모듈들에서 blueprint들을 가져옵니다.
@@ -20,6 +20,9 @@ app.register_blueprint(quiz_bp, url_prefix="/quiz")
 
 @app.route("/")
 def main_page() :
+  tokenCheck = request.cookies.get('mytoken')
+  if tokenCheck :
+    return redirect('/quiz/list')
   return render_template("auth/login.html")
 
 # @app.route("/login")

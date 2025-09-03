@@ -16,7 +16,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
         </div>
         <div class="text-left">
           <h1 class="text-2xl font-bold text-green-700">크래프톤 정글</h1>
-          <p class="text-sm text-gray-600">11기 모집 퀴즈 SNS</p>
+          <p class="text-sm text-gray-600">11기 이름 퀴즈</p>
         </div>
       </a>
     </div>
@@ -35,7 +35,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       <div class="w-full flex items-start items-start gap-2  font-semibold text-lg" >
           <i data-lucide="camera" class="my-custom-icon"></i> 프로필 사진
         </div>
-        <p class="w-full text-sm font-semibold text-[oklch(0.556_0_0)]">본인을 어필할 수 있는 소중한 사진 1개를 업로드해주세요</p>
+        <p class="w-full text-sm font-semibold text-[oklch(0.556_0_0)]">본인을 어필할 수 있는 사진 1개를 업로드해주세요 (얼굴사진 제외)</p>
         <div id="profile-preview-container" class="w-32 h-32 mt-5 rounded-full border-2 border-dashed border-green-300 flex items-center justify-center bg-green-50 overflow-hidden">
           <img id="profile-preview-img" alt="preview" class="hidden w-full h-full object-cover" />
           <i id="profile-preview-icon" data-lucide="upload" class="w-8 h-8 text-green-400"></i>
@@ -161,7 +161,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
       </div>
  
       <div class="w-full px-3 space-y-2 flex flex-col items-center">
-        <label for="oneLineIntro" class="text-md text-center font-bold text-slate-700">한 줄 소개</label>
+        <label for="oneLineIntro" class="text-md text-center font-bold text-slate-700">한 줄 소개 *</label>
         
         <input
           id="oneLineIntro"
@@ -171,7 +171,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
           required />
       </div>
       <div class="w-full px-3 space-y-2 flex flex-col items-center">
-        <label for="motivate" class="text-md text-center font-bold text-slate-700">지원 동기</label>
+        <label for="motivate" class="text-md text-center font-bold text-slate-700">지원 동기 *</label>
         
         <input
           id="motivate"
@@ -181,7 +181,7 @@ class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
           required />
       </div>
       <div class="w-full px-3 space-y-2 flex flex-col items-center">
-        <label for="favoriteFood" class="text-md text-center font-bold text-slate-700">좋아하는 음식</label>
+        <label for="favoriteFood" class="text-md text-center font-bold text-slate-700">좋아하는 음식 *</label>
         
         <input
           id="favoriteFood"

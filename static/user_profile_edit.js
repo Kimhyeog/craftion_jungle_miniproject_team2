@@ -6,7 +6,7 @@ function  showModal(title, message)
   const closeBtn = document.getElementById("close-modal");
 
   modalTitle.textContent = title;
-  modalMessage.textContent = message;
+  modalMessage.innerHTML = message;
 
   modal.classList.remove("hidden");
 
@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       const res = await fetch(form.action, { method: 'POST', body: formData });
       const data = await res.json();
       if (data.result === 'success') {
-        showModal("수정 완료", "수정이 완료되었습니다. 메인 페이지로 이동합니다");
+        showModal("수정 완료", "수정이 완료되었습니다.<br>메인 페이지로 이동합니다");
         setTimeout(() => {
           window.location.href = '/quiz/list';
         }, 2000)

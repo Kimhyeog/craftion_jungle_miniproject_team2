@@ -7,7 +7,7 @@ function  showModal(title, message)
   const closeBtn = document.getElementById("close-modal");
 
   modalTitle.textContent = title;
-  modalMessage.textContent = message;
+  modalMessage.innerHTML = message;
 
   modal.classList.remove("hidden");
 
@@ -109,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then((data) => {
           if (data.result === 'success') {
-            showModal("✅ 회원가입 성공", "회원가입에 성공했습니다! 로그인 페이지로 이동합니다.");
+            showModal("✅ 회원가입 성공", "회원가입에 성공했습니다!<br>로그인 페이지로 이동합니다.");
             setTimeout(() => {
               window.location.href = data.redirect_url;
             }, 2000)
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .catch((error) => {
           console.error('Error:', error);
-          showModal("🚨 오류 발생", "요청 처리 중 심각한 오류가 발생했습니다.");
+          showModal("🚨 오류 발생", "이미 등록된 아이디입니다.");
         })
         .finally(() => {
           // 제출 상태 초기화
@@ -170,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then((data) => {
           if (data.result === 'success') {
-            showModal("🔑 로그인 성공", "로그인에 성공했습니다. 메인 페이지로 이동합니다.");
+            showModal("🔑 로그인 성공", "로그인에 성공했습니다.<br>메인 페이지로 이동합니다.");
             const destinationUrl = data.redirect_url + '?id=' + data.user_db_id;
             setTimeout(() => {
               window.location.href = destinationUrl;
