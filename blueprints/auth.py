@@ -9,11 +9,54 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
 import os
+from functools import wraps
 # 'auth' 라는 이름의 Blueprint를 생성합니다.
 auth_bp = Blueprint('auth', __name__)
 
 # JWT 시크릿 키 (프로덕션에서는 환경변수/설정으로 관리)
 SECRET_KEY = "your-secret-key-here-change-this-in-production"
+
+# 페이지 이동 시 토큰 인증 데코레이터
+def page_auth_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        token = request.cookies.get('mytoken')
+        
+        if not token:
+            # 토큰이 없으면 모달과 함께 로그인 페이지로 리다이렉트
+            return render_template("auth/login.html", 
+                                 show_auth_modal=True, 
+                                 modal_message="로그인이 필요합니다.")
+        
+        try:
+            # JWT 토큰 검증
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            userId = payload['id']
+            
+            # DB에서 사용자 확인
+            user = db.users.find_one({'userId': userId})
+            if not user:
+                # 사용자가 DB에 없으면 모달과 함께 로그인 페이지로 리다이렉트
+                return render_template("auth/login.html", 
+                                     show_auth_modal=True, 
+                                     modal_message="존재하지 않는 사용자입니다.")
+            
+        except jwt.ExpiredSignatureError:
+            # 토큰 만료
+            return render_template("auth/login.html", 
+                                 show_auth_modal=True, 
+                                 modal_message="로그인 시간이 만료되었습니다.")
+            
+        except jwt.InvalidTokenError:
+            # 토큰이 유효하지 않음
+            return render_template("auth/login.html", 
+                                 show_auth_modal=True, 
+                                 modal_message="유효하지 않은 로그인 정보입니다.")
+        
+        # 인증 성공 - 원래 함수 실행
+        return f(*args, **kwargs)
+    
+    return decorated_function
 
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -123,7 +166,7 @@ def login_page():
         # 3. 사용자가 존재하고, 비밀번호도 일치하는지 확인합니다.
         if user and check_password_hash(user['password'], password):
             # 4. 로그인 성공: JWT 발급 (14일 만료)
-            exp = datetime.now(timezone.utc) + timedelta(days=14)
+            exp = datetime.now(timezone.utc) + timedelta(minutes=1)
             payload = {"id": userId, "exp": exp}
             token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 

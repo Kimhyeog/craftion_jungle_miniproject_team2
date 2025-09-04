@@ -73,6 +73,26 @@
     </button>
   </div>
 </div>
+
+<!-- 인증 실패 시 자동 모달 표시 -->
+{% if show_auth_modal and modal_message %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalMessage = document.getElementById("modal-message");
+  const closeBtn = document.getElementById("close-modal");
+
+  modalTitle.textContent = "🔐 인증 필요";
+  modalMessage.textContent = "{{ modal_message }}";
+  modal.classList.remove("hidden");
+
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+});
+</script>
+{% endif %}
 {% endblock %}
 
 <!-- [추가] auth.js를 불러오기 위한 스크립트 블록 -->

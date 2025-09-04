@@ -17,59 +17,8 @@ function  showModal(title, message)
 
 }
 
-// 토큰 만료 시 자동 로그인 페이지 이동 함수
-function checkTokenExpiration() {
-  // 현재 페이지가 로그인/회원가입 페이지가 아닌 경우에만 토큰 확인
-  const currentPath = window.location.pathname;
-  if (currentPath.includes('/auth/login') || currentPath.includes('/auth/signup')) {
-    return;
-  }
-  
-  fetch('/quiz/api/auth/check')
-    .then(response => response.json())
-    .then(data => {
-      if (data.result === 'fail') {
-        // 토큰이 만료되었거나 유효하지 않은 경우
-        if (data.msg === '로그인 시간이 만료되었습니다.' || 
-            data.msg === '유효하지 않은 토큰입니다.' ||
-            data.msg === '존재하지 않는 사용자입니다.' ||
-            data.msg === '로그인이 필요합니다.') {
-          alert(data.msg);
-          window.location.href = '/auth/login';
-        }
-      }
-    })
-    .catch(error => {
-      console.error('토큰 확인 중 오류:', error);
-    });
-}
-
-// 인증 실패 시 공통 처리 함수
-function handleAuthFailure(data) {
-  if (data.result === 'fail' && data.redirect_url) {
-    alert(data.msg);
-    window.location.href = data.redirect_url;
-  }
-}
-
-// fetch 요청에 인증 실패 처리 추가
-function fetchWithAuth(url, options = {}) {
-  return fetch(url, options)
-    .then(response => response.json())
-    .then(data => {
-      if (data.result === 'fail' && data.redirect_url) {
-        handleAuthFailure(data);
-        return Promise.reject(data);
-      }
-      return data;
-    });
-}
-
 // 회원가입과 로그인 폼 처리
 document.addEventListener('DOMContentLoaded', function () {
-  
-  // 페이지 로드 시 토큰 상태 확인
-  checkTokenExpiration();
   
   // --- 1. 회원가입 폼 처리 ---
   const signupForm = document.getElementById('signup-form');

@@ -4,6 +4,7 @@ from datetime import datetime, timezone, timedelta
 import jwt
 # 독립적인 MongoClient 연결 대신, 공유되는 db 객체를 가져옵니다.
 from database import db
+from blueprints.auth import page_auth_required
 
 # Blueprint 이름은 그대로 사용하되, 파일 위치가 바뀌었습니다.
 profile_bp = Blueprint("user_profile", __name__)
@@ -16,6 +17,7 @@ SECRET_KEY = "your-secret-key-here-change-this-in-production"
 # 이 라우트의 실제 접속 주소는 '/user/profile'이 됩니다.
 # --- 마이페이지 렌더링 함수를 수정합니다 ---
 @profile_bp.route("/profile", methods=['GET'])
+@page_auth_required
 def make_profile():
     # JWT 기반으로 클라이언트가 /user/api/me를 호출하므로 쿼리 id가 필요 없습니다.
     return render_template("user/mypage.html")
@@ -91,6 +93,7 @@ def get_my_profile():
 
 # 실제 접속 주소: '/user/profile/edit'
 @profile_bp.route("/profile/edit", methods=['GET'])
+@page_auth_required
 def get_edit_page():
     return render_template("user/mypage_edit.html")
 

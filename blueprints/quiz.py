@@ -6,6 +6,7 @@ from database import db
 from bson import ObjectId
 import math
 import jwt
+from blueprints.auth import page_auth_required
 
 quiz_bp = Blueprint('quiz', __name__)
 
@@ -25,6 +26,7 @@ def get_current_user_id():
         return None
 
 @quiz_bp.route("/list")
+@page_auth_required
 def quiz_list():
     page = request.args.get('page', 1, type=int)
     search_keyword = request.args.get('search', '', type=str)
@@ -85,6 +87,7 @@ def change_userid_to_dbid(_userId):
 
 # ... (이하 다른 라우터는 동일) ...
 @quiz_bp.route("/dashboard/<string:db_id>")
+@page_auth_required
 def quiz_dashboard(db_id):
   if not ObjectId.is_valid(db_id):
     return "Invalid user ID format", 400
