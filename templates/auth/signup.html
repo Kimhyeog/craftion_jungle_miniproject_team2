@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% block header %}{% endblock %}
+{% block content %}
+
+<form 
+id="signup-form"
+  method="post"
+  enctype="multipart/form-data"
+  action="{{ url_for('auth.signup_page') }}"
+class="min-h-screen bg-gradient-to-br from-green-50 to-white py-8 px-4">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-center mb-8">
+      <a href="/" class="inline-flex items-center gap-3 mb-6">
+        <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+          <span class="text-white font-bold text-xl">J</span>
+        </div>
+        <div class="text-left">
+          <h1 class="text-2xl font-bold text-green-700">크래프톤 정글</h1>
+          <p class="text-sm text-gray-600">11기 이름 퀴즈</p>
+        </div>
+      </a>
+    </div>
+
+    <!-- 화원 가입 Input Card -->
+    <div class="flex flex-col items-center justify-center gap-6 rounded-xl border border-green-100 bg-white py-6 px-6 text-slate-900 shadow-sm">
+      <!-- Card Title -->
+      <div class="flex flex-col items-center justify-center gap-3">
+        <h1 class="font-semibold text-2xl leading-none">회원 가입</h1>
+        <p>동기들과 함께하는 퀴즈 게임에 참여하기 위해 프로필을 작성해주세요</p>
+      </div>
+      <!-- 자식 Card -->
+      <div class="w-full flex flex-col items-center justify-center gap-3 rounded-xl border border-green-100 bg-white py-6 px-6 text-slate-900 shadow-sm">
+      
+      <!-- 자식 Card Title -->
+      <div class="w-full flex items-start items-start gap-2  font-semibold text-lg" >
+          <i data-lucide="camera" class="my-custom-icon"></i> 프로필 사진
+        </div>
+        <p class="w-full text-sm font-semibold text-[oklch(0.556_0_0)]">본인을 어필할 수 있는 사진 1개를 업로드해주세요 (얼굴사진 제외)</p>
+        <div id="profile-preview-container" class="w-32 h-32 mt-5 rounded-full border-2 border-dashed border-green-300 flex items-center justify-center bg-green-50 overflow-hidden">
+          <img id="profile-preview-img" alt="preview" class="hidden w-full h-full object-cover" />
+          <i id="profile-preview-icon" data-lucide="upload" class="w-8 h-8 text-green-400"></i>
+        </div>
+        <!-- 사진 업로드 박스 -->
+        <label for="file-upload" class="flex h-9 min-w-0 cursor-pointer items-center justify-center rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-xs outline-none transition-[color,box-shadow] placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground hover:bg-slate-100 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-input/30 dark:hover:bg-slate-800 dark:aria-invalid:ring-destructive/40 md:text-sm">
+          사진을 업로드 해주세요
+        </label>
+
+        <input id="file-upload" name="profileImage" type="file" class="sr-only" accept="image/*" required/>
+
+        <!-- 크롭 모달 -->
+        <div id="cropper-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+          <div class="w-full max-w-xl rounded-xl bg-white shadow-lg">
+            <div class="flex items-center justify-between border-b px-4 py-3">
+              <h3 class="text-lg font-semibold">이미지 자르기</h3>
+              <button id="cropper-close" type="button" class="text-slate-500 hover:text-slate-700">닫기</button>
+            </div>
+            <div class="p-4 space-y-4">
+              <div class="w-full">
+                <img id="cropper-image" class="max-h-[60vh] w-full object-contain" alt="crop source" />
+              </div>
+              <!-- 원형 미리보기 -->
+              <div class="flex items-center justify-center">
+                <div class="w-28 h-28 rounded-full overflow-hidden border">
+                  <div id="cropper-preview" class="w-28 h-28"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex justify-end gap-2 border-t px-4 py-3">
+              <button id="cropper-cancel" type="button" class="inline-flex h-9 items-center rounded-md border border-slate-300 px-4 text-slate-700 hover:bg-slate-50">취소</button>
+              <button id="cropper-apply" type="button" class="inline-flex h-9 items-center rounded-md bg-green-600 px-4 font-medium text-white hover:bg-green-700">적용</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 아이디 비번 기입 Box -->
+      <!-- 아이디/비밀번호 입력 -->
+      <div class="px-3 w-full grid grid-cols-1 md:grid-cols-2 gap-6 border-b pb-6">
+        <div class="space-y-2">
+          <label for="userId" class="text-sm font-medium text-slate-700">아이디 *</label>
+          <input
+            id="userId"
+            name="userId"
+            type="text"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
+            required />
+        </div>
+        <div class="space-y-2">
+          <label for="password" class="text-sm font-medium text-slate-700">비밀번호 *</label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50"
+            required />
+        </div>
+      </div>
+      
+
+      <!-- 개인 정보 기입 Box -->
+       <div class="px-3 w-full grid grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label for="userName" class="text-sm font-medium text-slate-700">이름 *</label>
+          <input
+            id="userName"
+            name="userName"
+            type="text"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            required />
+        </div>
+        <div class="space-y-2">
+          <label for="nickName" class="text-sm font-medium text-slate-700">닉네임 *</label>
+          <input
+            id="nickName"
+            name="nickName"
+            type="text"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            required />
+        </div>
+        <div class="space-y-2">
+          <label for="hobby" class="text-sm font-medium text-slate-700">취미 *</label>
+          <input
+            id="hobby"
+            name="hobby"
+            type="text"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            required />
+        </div>
+        
+        
+        <div class="space-y-2">
+          <label for="mbti" class="text-sm font-medium text-slate-700">MBTI *</label>
+          
+          <select
+            id="mbti"
+            name="mbti"
+            class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+            required
+          >
+            <option value="" disabled selected>MBTI를 선택하세요</option>
+            <option value="ISTJ">ISTJ</option>
+            <option value="ISFJ">ISFJ</option>
+            <option value="INFJ">INFJ</option>
+            <option value="INTJ">INTJ</option>
+            <option value="ISTP">ISTP</option>
+            <option value="ISFP">ISFP</option>
+            <option value="INFP">INFP</option>
+            <option value="INTP">INTP</option>
+            <option value="ESTP">ESTP</option>
+            <option value="ESFP">ESFP</option>
+            <option value="ENFP">ENFP</option>
+            <option value="ENTP">ENTP</option>
+            <option value="ESTJ">ESTJ</option>
+            <option value="ESFJ">ESFJ</option>
+            <option value="ENFJ">ENFJ</option>
+            <option value="ENTJ">ENTJ</option>
+          </select>
+        </div>
+
+        
+      </div>
+ 
+      <div class="w-full px-3 space-y-2 flex flex-col items-center">
+        <label for="oneLineIntro" class="text-md text-center font-bold text-slate-700">한 줄 소개 *</label>
+        
+        <input
+          id="oneLineIntro"
+          name="oneLineIntro"
+          type="text"
+          class="flex h-9 w-full  min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+          required />
+      </div>
+      <div class="w-full px-3 space-y-2 flex flex-col items-center">
+        <label for="motivate" class="text-md text-center font-bold text-slate-700">지원 동기 *</label>
+        
+        <input
+          id="motivate"
+          name="motivate"
+          type="text"
+          class="flex h-9 w-full  min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+          required />
+      </div>
+      <div class="w-full px-3 space-y-2 flex flex-col items-center">
+        <label for="favoriteFood" class="text-md text-center font-bold text-slate-700">좋아하는 음식 *</label>
+        
+        <input
+          id="favoriteFood"
+          name="favoriteFood"
+          type="text"
+          class="flex h-9 w-full  min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+          required />
+      </div>
+      <div class="w-full flex flex-col items-center justify-center ...">
+      <!-- ... -->
+      <!-- 중요! : 회원가입 완료를 위한 제출 버튼이 필요합니다. -->
+      <button type="submit" class="w-full max-w-xs mt-6 h-12 rounded-lg bg-green-600 text-white font-bold text-lg hover:bg-green-700 transition-colors">
+        회원가입
+      </button>
+    </div>
+    </div>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</form>
+
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-[400px] text-center">
+    <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
+    <p id="modal-message" class="text-gray-600 mb-6"></p>
+    <button 
+      id="close-modal" type="button"
+      class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+    >
+      닫기
+    </button>
+  </div>
+</div>
+
+{% endblock %}
+{% block scripts %}
+<link href="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.css" rel="stylesheet" />
+<script src="https://unpkg.com/cropperjs@1.6.2/dist/cropper.min.js"></script>
+<script src="{{ url_for('static', filename='image_crop.js') }}"></script>
+<script src="{{ url_for('static', filename='auth.js') }}"></script>
+{% endblock %} <!-- scripts 블록 끝 <-- 이 줄을 추가하세요! -->

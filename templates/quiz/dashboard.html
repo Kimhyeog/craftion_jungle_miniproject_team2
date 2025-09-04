@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="min-h-screen flex flex-col items-center justify-start pt-16 space-y-6">
+  <!-- 화면의 50% 크기 박스 -->
+  <div class="w-[50%] bg-white rounded-3xl shadow-2xl p-12 flex flex-col items-center">
+    
+    <!-- 제목 영역 -->
+    <div class="flex items-end space-x-3 mb-8 whitespace-nowrap">
+      <span class="text-5xl font-extrabold text-green-700">{{ nickName }}</span>
+      <span class="text-2xl text-black">님은 누굴까요?</span>
+    </div>
+
+    <!-- 사진 원형 영역 -->
+    {% if profilePhoto %}
+      <img 
+        src="{{ url_for('static', filename=profilePhoto.replace('static/', '')) }}"
+        alt="{{ nickName }}의 프로필 사진"
+        class="w-40 h-40 rounded-full object-cover shadow-lg mb-8"
+      />
+    {% else %}
+      <div class="w-40 h-40 bg-gray-200 rounded-full flex items-center justify-center shadow-inner mb-8">
+        <span class="text-gray-500">사진 없음</span>
+      </div>
+    {% endif %}
+
+    <!-- 추가 정보 영역 (사진 밑에) -->
+    <div class="w-full bg-gray-50 rounded-xl shadow-inner p-6 space-y-4">
+      <p><strong>자기 소개:</strong> {{ selfIntro or "아직 작성 안함" }}</p>
+      <p><strong>지원 동기:</strong> {{ selfMotive or "아직 작성 안함" }}</p>
+      <p><strong>좋아하는 음식:</strong> {{ favoriteFood or "아직 작성 안함" }}</p>
+      <p><strong>MBTI:</strong> {{ mbti or "아직 작성 안함" }}</p>
+      <p><strong>취미:</strong> {{ hobby or "아직 작성 안함" }}</p>
+    </div>
+
+  </div>
+
+  <div class="w-[50%] h-[5vh] flex items-center">
+  <input 
+    type="text" 
+    placeholder="이름을 입력하세요"
+    class="flex-1 h-full px-4 rounded-l-xl border border-gray-300 text-lg focus:outline-none focus:ring-2 focus:ring-green-500 mr-6"
+  />
+  <button 
+    id="submit-btn"
+    type="button" 
+    class="h-full px-10 bg-red-600 text-white font-bold rounded-r-xl hover:bg-red-700 transition-colors"
+  >
+    제출
+  </button>
+</div>
+
+  <!-- 모달창 -->
+  <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-[400px] text-center">
+      <h2 id="modal-title" class="text-2xl font-bold mb-4">정답 제출 완료</h2>
+      <p id="modal-message" class="text-gray-600 mb-6">제출해주셔서 감사합니다!</p>
+      <button 
+        id="close-modal" 
+        class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+      >
+        닫기
+      </button>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script> // 파일 분리되어있으니까 이렇게 변수 다시 만들어야 js파일로 전달이 됨 
+  const correctName = "{{ correctName }}";
+  const targetId = "{{ targetId }}";
+</script>
+
+<script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+{% endblock %}

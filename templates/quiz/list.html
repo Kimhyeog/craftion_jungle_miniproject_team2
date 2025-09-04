@@ -1,0 +1,142 @@
+{# templates/quiz/list.html #}
+{% extends 'base.html' %}
+{% block content %}
+<section class="space-y-6">
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">단서 목록</h1>
+    <p class="text-gray-600">다른 유저들의 단서를 확인해보세요!</p>
+  </div>
+  
+  <div class="mb-6">
+    <form method="GET" action="{{ url_for('quiz.quiz_list') }}" class="max-w-md mx-auto">
+      <div class="relative">
+        <input 
+          type="text" 
+          name="search"
+          id="searchInput"
+          placeholder="닉네임, 소개, MBTI, 관심사로 검색..."
+          value="{{ search_keyword or '' }}"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+        >
+        <button type="submit" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+          🔍
+        </button>
+      </div>
+    </form>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    {% for user in users %}
+    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer user-card flex flex-col" 
+         data-user-id="{{ user.userId }}">
+      
+      <div class="relative w-full h-48 rounded-t-lg">
+        {% if user.quizInfo.profilePhoto %}
+          <img src="/{{ user.quizInfo.profilePhoto }}" 
+               alt="{{ user.quizInfo.nickName }} 프로필 사진" 
+               class="w-full h-full object-cover rounded-t-lg"
+               onerror="this.onerror=null; this.src='/static/images/default_profile.png';">
+        {% else %}
+          <div class="w-full h-full bg-gradient-to-br from-green-100 to-green-200 rounded-t-lg flex items-center justify-center">
+            <span class="text-4xl text-green-600">👤</span>
+          </div>
+        {% endif %}
+      </div>
+      
+      {# 카드 내용 (flex-grow를 추가하여 내용이 카드 높이를 채우도록 함) #}
+      <div class="p-4 flex flex-col flex-grow">
+        <h3 class="text-xl font-bold text-gray-800 mb-2" data-search="nickname">{{ user.quizInfo.nickName }}</h3>
+        
+        {% if user.quizInfo.selfIntro %}
+        <p class="text-gray-600 text-sm mb-3 line-clamp-2" data-search="intro">{{ user.quizInfo.selfIntro }}</p>
+        {% endif %}
+        
+        {# ▼▼▼ [수정] 태그 표시 영역 ▼▼▼ #}
+        {# 태그 영역이 항상 카드 하단에 위치하도록 mt-auto 클래스 추가 #}
+        <div class="mt-auto pt-3">
+            <div class="flex flex-wrap gap-2">
+              {# 1. MBTI 태그 #}
+              {% if user.quizInfo.mbti %}
+              <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="mbti">
+                #{{ user.quizInfo.mbti }}
+              </span>
+              {% endif %}
+
+              {# 2. 취미 태그 #}
+              {% if user.quizInfo.hobby %}
+              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="hobby">
+                #{{ user.quizInfo.hobby }}
+              </span>
+              {% endif %}
+
+              {# 3. 좋아하는 음식 태그 #}
+              {% if user.quizInfo.favoriteFood %}
+              <span class="inline-block bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="favoriteFood">
+                #{{ user.quizInfo.favoriteFood }}
+              </span>
+              {% endif %}
+            </div>
+        </div>
+        {# ▲▲▲ 수정 완료 ▲▲▲ #}
+        
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  
+  {% if not users %}
+  <div class="text-center py-12">
+    <div class="text-6xl mb-4">😔</div>
+    <h3 class="text-xl font-semibold text-gray-700 mb-2">
+      {% if search_keyword %}
+      "{{ search_keyword }}"에 대한 검색 결과가 없습니다
+      {% else %}
+      아직 등록된 유저가 없습니다
+      {% endif %}
+    </h3>
+    <p class="text-gray-500">
+      {% if search_keyword %}
+      다른 키워드로 검색해보세요.
+      {% else %}
+      첫 번째 유저가 되어보세요!
+      {% endif %}
+    </p>
+  </div>
+  {% endif %}
+  
+  {% if total_pages > 1 %}
+  <nav class="flex justify-center items-center space-x-2 mt-8">
+    <a href="{{ url_for('quiz.quiz_list', page=current_page - 1, search=search_keyword) if current_page > 1 else '#' }}"
+       class="px-4 py-2 border rounded-md {{ 'bg-gray-200 text-gray-400 cursor-not-allowed' if current_page == 1 else 'bg-white text-gray-700 hover:bg-gray-50' }}">
+      이전
+    </a>
+    {% for page_num in range(1, total_pages + 1) %}
+      <a href="{{ url_for('quiz.quiz_list', page=page_num, search=search_keyword) }}"
+         class="px-4 py-2 border rounded-md {{ 'bg-green-500 text-white' if page_num == current_page else 'bg-white text-gray-700 hover:bg-gray-50' }}">
+        {{ page_num }}
+      </a>
+    {% endfor %}
+    <a href="{{ url_for('quiz.quiz_list', page=current_page + 1, search=search_keyword) if current_page < total_pages else '#' }}"
+       class="px-4 py-2 border rounded-md {{ 'bg-gray-200 text-gray-400 cursor-not-allowed' if current_page == total_pages else 'bg-white text-gray-700 hover:bg-gray-50' }}">
+      다음
+    </a>
+  </nav>
+  {% endif %}
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userCards = document.querySelectorAll('.user-card');
+  userCards.forEach(card => {
+    card.addEventListener('click', function() {
+      const userId = this.getAttribute('data-user-id');
+      if (userId) {
+        window.location.href = `/quiz/usr/${userId}`;
+      }
+    });
+  });
+});
+</script>
+{% endblock %}

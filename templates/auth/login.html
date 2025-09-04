@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block header %}{% endblock %}
+{% block content %}
+<section class="min-h-screen bg-gradient-to-br from-green-50 to-white flex items-center justify-center p-4">
+  <div class="w-full max-w-md">
+    <!-- 로고 부분 -->
+  <div class="text-center mb-8">
+    <a href="/" class="inline-flex items-center gap-3 mb-6">
+      <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+        <span class="text-white font-bold text-xl">J</span>
+      </div>
+      <div class="text-left">
+        <h1 class="text-2xl font-bold text-green-700">크래프톤 정글</h1>
+        <p class="text-sm text-gray-600">11기 이름 퀴즈</p>
+      </div>
+    </a>
+  </div>
+
+  <!-- Input Card -->
+  <div class="flex items-center justify-center px-6 bg-white border-green-100 text-slate-900 flex flex-col gap-6 rounded-xl border py-6 shadow-sm">
+    <!-- card-title -->
+    <div class="font-semibold text-2xl leading-none">
+      로그인
+    </div>
+    <p class="text-sm font-semibold text-[oklch(0.556_0_0)]">계정에 로그인하여 퀴즈 게임을 시작하세요</p>
+    <form 
+      id="login-form"
+    class="w-full space-y-4" method="post" action="{{ url_for('auth.login_page') }}">
+      <div class="space-y-2">
+        <label for="userId" class="text-sm font-medium text-slate-700">아이디</label>
+        <input
+          id="userId"
+          name="userId"
+          type="text"
+          placeholder="아이디를 입력하세요"
+          class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+          required
+        />
+      </div>
+      <div class="space-y-2">
+        <label for="password" class="text-sm font-medium text-slate-700">비밀번호</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          placeholder="비밀번호를 입력하세요"
+          class="flex h-9 w-full min-w-0 rounded-md border border-slate-300 bg-white px-3 py-1 text-base md:text-sm text-slate-900 placeholder:text-slate-400 shadow-sm outline-none transition-[color,box-shadow] focus-visible:border-green-600 focus-visible:ring-2 focus-visible:ring-green-600/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-400 dark:border-slate-700 aria-invalid:border-red-500 aria-invalid:ring-2 aria-invalid:ring-red-500/20"
+          required
+        />
+      </div>
+      <button type="submit" class="w-full h-10 rounded-md bg-green-600 text-white font-medium hover:bg-green-700 transition-colors">
+        로그인
+      </button>
+    </form>
+    <p class="text-sm text-gray-600">
+      아직 계정이 없으신가요?
+        <a href="{{ url_for('auth.signup_page') }}" class="text-green-700 hover:underline font-medium">회원가입</a>
+      </p>
+  </div>
+
+</div>
+</section>
+
+<div id="modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden">
+  <div class="bg-white rounded-2xl shadow-xl p-8 w-[400px] text-center">
+    <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
+    <p id="modal-message" class="text-gray-600 mb-6"></p>
+    <button 
+      id="close-modal" 
+      class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+    >
+      닫기
+    </button>
+  </div>
+</div>
+
+<!-- 인증 실패 시 자동 모달 표시 -->
+{% if show_auth_modal and modal_message %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const modal = document.getElementById("modal");
+  const modalTitle = document.getElementById("modal-title");
+  const modalMessage = document.getElementById("modal-message");
+  const closeBtn = document.getElementById("close-modal");
+
+  modalTitle.textContent = "🔐 인증 필요";
+  modalMessage.textContent = "{{ modal_message }}";
+  modal.classList.remove("hidden");
+
+  closeBtn.onclick = () => {
+    modal.classList.add("hidden");
+  };
+});
+</script>
+{% endif %}
+{% endblock %}
+
+<!-- [추가] auth.js를 불러오기 위한 스크립트 블록 -->
+{% block scripts %}
+<script src="{{ url_for('static', filename='auth.js') }}"></script>
+{% endblock %}
