@@ -27,35 +27,58 @@
   
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
     {% for user in users %}
-    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer user-card" 
+    <div class="bg-white rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer user-card flex flex-col" 
          data-user-id="{{ user.userId }}">
       
-      {# ▼▼▼ [수정] 프로필 사진 표시 영역 ▼▼▼ #}
       <div class="relative w-full h-48 rounded-t-lg">
-        {# 1. profilePhoto 값이 존재하는 경우, 해당 이미지를 출력합니다. #}
         {% if user.quizInfo.profilePhoto %}
           <img src="/{{ user.quizInfo.profilePhoto }}" 
                alt="{{ user.quizInfo.nickName }} 프로필 사진" 
                class="w-full h-full object-cover rounded-t-lg"
                onerror="this.onerror=null; this.src='/static/images/default_profile.png';">
-        {# 2. profilePhoto 값이 없는 경우(null 또는 빈 문자열), 기본 아이콘을 출력합니다. #}
         {% else %}
           <div class="w-full h-full bg-gradient-to-br from-green-100 to-green-200 rounded-t-lg flex items-center justify-center">
             <span class="text-4xl text-green-600">👤</span>
           </div>
         {% endif %}
       </div>
-      {# ▲▲▲ 수정 완료 ▲▲▲ #}
       
-      {# 카드 내용 (이하 코드는 기존과 동일) #}
-      <div class="p-4">
+      {# 카드 내용 (flex-grow를 추가하여 내용이 카드 높이를 채우도록 함) #}
+      <div class="p-4 flex flex-col flex-grow">
         <h3 class="text-xl font-bold text-gray-800 mb-2" data-search="nickname">{{ user.quizInfo.nickName }}</h3>
         
         {% if user.quizInfo.selfIntro %}
         <p class="text-gray-600 text-sm mb-3 line-clamp-2" data-search="intro">{{ user.quizInfo.selfIntro }}</p>
         {% endif %}
         
-        {# ... (나머지 카드 내용) ... #}
+        {# ▼▼▼ [수정] 태그 표시 영역 ▼▼▼ #}
+        {# 태그 영역이 항상 카드 하단에 위치하도록 mt-auto 클래스 추가 #}
+        <div class="mt-auto pt-3">
+            <div class="flex flex-wrap gap-2">
+              {# 1. MBTI 태그 #}
+              {% if user.quizInfo.mbti %}
+              <span class="inline-block bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="mbti">
+                #{{ user.quizInfo.mbti }}
+              </span>
+              {% endif %}
+
+              {# 2. 취미 태그 #}
+              {% if user.quizInfo.hobby %}
+              <span class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="hobby">
+                #{{ user.quizInfo.hobby }}
+              </span>
+              {% endif %}
+
+              {# 3. 좋아하는 음식 태그 #}
+              {% if user.quizInfo.favoriteFood %}
+              <span class="inline-block bg-pink-100 text-pink-800 text-xs font-semibold px-2.5 py-1 rounded-full" data-search="favoriteFood">
+                #{{ user.quizInfo.favoriteFood }}
+              </span>
+              {% endif %}
+            </div>
+        </div>
+        {# ▲▲▲ 수정 완료 ▲▲▲ #}
+        
       </div>
     </div>
     {% endfor %}
@@ -103,8 +126,6 @@
 {% endblock %}
 
 {% block scripts %}
-{# [수정] list.js는 이제 서버 기반 검색/페이지네이션을 사용하므로 클라이언트 사이드 필터링 기능이 필요 없습니다. #}
-{# 카드 클릭 기능만 남겨둡니다. #}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   const userCards = document.querySelectorAll('.user-card');
@@ -112,8 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
     card.addEventListener('click', function() {
       const userId = this.getAttribute('data-user-id');
       if (userId) {
-        // [수정] /user/profile/ 이 아닌 퀴즈 대시보드로 연결해야 할 수 있습니다.
-        // 현재 코드에서는 /quiz/usr/ 로 연결하여 DB ID 기반의 대시보드로 리다이렉트합니다.
         window.location.href = `/quiz/usr/${userId}`;
       }
     });
