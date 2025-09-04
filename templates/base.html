@@ -5,7 +5,6 @@
   <title>미니 프로젝트</title>
   <link rel="stylesheet" href="/static/index.css" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ajax jquery 쓰려면 아래 라인 필요  -->
   <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
 </head>
@@ -13,16 +12,13 @@
   {% block header %}
   <header class="sticky top-0 z-50 text-[oklch(0.985_0_0)] text-white bg-gradient-to-r from-emerald-700 to-green-700/95 backdrop-blur supports-[backdrop-filter]:bg-emerald-700/80 shadow-md">
     <div class="max-w-6xl mx-auto flex h-16 md:h-20 items-center justify-between px-4">
-      <!-- 좌측: 아바타/로고 -->
       <a href="/" class="group flex items-center gap-3">
         <div id="site-avatar" class="w-10 h-10 md:w-12 md:h-12 bg-white rounded-full flex items-center justify-center overflow-hidden ring-2 ring-white/30 transition-transform group-hover:scale-105">
           <span class="font-bold text-lg md:text-xl text-emerald-700">J</span>
         </div>
         <span class="hidden md:inline text-xl font-semibold tracking-tight">크래프톤 정글</span>
       </a>
-      <!-- 우측: 상태 영역 -->
       <div id="header-user-area" class="flex items-center gap-2 md:gap-3">
-        <!-- JS에서 로그인 상태에 따라 채웁니다. -->
         <a href="{{ url_for('auth.login_page') }}" class="inline-flex items-center h-9 px-4 rounded-md border border-white/25 bg-white/10 hover:bg-white/20 text-white transition-colors">로그인</a>
       </div>
     </div>
@@ -33,20 +29,19 @@
   </main>
   <script src="/static/index.js"></script>
   <script>
-  // 헤더 사용자 상태 표시: /user/api/me 이용
   (async () => {
     try {
       const res = await fetch('/user/api/me');
-      if (!res.ok) return; // 비로그인 등
+      if (!res.ok) return;
       const data = await res.json();
       if (data.result !== 'success') return;
       const area = document.getElementById('header-user-area');
       if (!area) return;
       const name = data.userName || data.userId || '사용자';
-      const photo = data.profilePhoto; // URL 또는 null
+      const photo = data.profilePhoto; 
       const avatar = document.getElementById('site-avatar');
       if (avatar) {
-        // 로그인 상태에서 프로필 사진이 있으면 출력, 없으면 기존 로고 유지
+
         if (photo) {
           const src = /^https?:\/\//.test(photo) ? photo : (photo.startsWith('/') ? photo : `/${photo}`);
           avatar.innerHTML = '';
@@ -62,7 +57,7 @@
         <a href="/user/profile" class="inline-flex items-center h-9 px-3 md:px-4 rounded-md border border-white/25 bg-white/10 hover:bg-white/20 text-white transition-colors">마이페이지</a>
         <a href="/auth/logout" class="inline-flex items-center h-9 px-3 md:px-4 rounded-md bg-white text-emerald-700 font-medium hover:bg-slate-100 transition-colors">로그아웃</a>
       `;
-    } catch (_) { /* noop */ }
+    } catch (_) {  }
   })();
   </script>
   {% block scripts %}

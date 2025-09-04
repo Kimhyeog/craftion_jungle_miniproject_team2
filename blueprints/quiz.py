@@ -1,5 +1,3 @@
-# blueprints/quiz.py
-
 from flask import Blueprint, render_template, request, jsonify
 from flask import redirect, url_for
 from database import db
@@ -10,10 +8,8 @@ from blueprints.auth import page_auth_required
 
 quiz_bp = Blueprint('quiz', __name__)
 
-# JWT 시크릿 키 (auth.py와 동일해야 함)
 SECRET_KEY = "your-secret-key-here-change-this-in-production"
 
-# JWT 토큰에서 userId 추출하는 함수
 def get_current_user_id():
     token = request.cookies.get('mytoken')
     if not token:
@@ -32,12 +28,10 @@ def quiz_list():
     search_keyword = request.args.get('search', '', type=str)
     limit = 8
 
-    # ▼▼▼ [수정] 기본 쿼리에 quizInfo 필드가 존재하는 조건 추가 ▼▼▼
     query = {'quizInfo': {'$exists': True}}
 
     if search_keyword:
         regex = {'$regex': search_keyword, '$options': 'i'}
-        # 검색 시에도 quizInfo 존재 조건을 AND 조건으로 합침
         query['$and'] = [
             {
                 '$or': [
@@ -50,26 +44,17 @@ def quiz_list():
             }
         ]
     
-    # userWhoSolvedMeCount가 0인 유저들만 추출
     query['userWhoSolvedMeCount'] = 0
     
-    # 현재 로그인한 사용자 제외
     current_user_id = get_current_user_id()
     if current_user_id:
-        query['userId'] = {'$ne': current_user_id}  # $ne는 "not equal"을 의미
+        query['userId'] = {'$ne': current_user_id}
     
     total_users = db.users.count_documents(query)
     total_pages = math.ceil(total_users / limit)
     skip_count = (page - 1) * limit
     
     users = list(db.users.find(query).skip(skip_count).limit(limit))
-    
-    # --- 디버깅을 위한 코드 ---
-    # 터미널에서 조회된 데이터가 정상적인지 확인해보세요.
-    # print(f"페이지: {page}, 검색어: '{search_keyword}', 찾은 유저 수: {len(users)}")
-    # for u in users:
-    #     print(u)
-    # -------------------------
 
     return render_template(
         "quiz/list.html",
@@ -85,7 +70,6 @@ def change_userid_to_dbid(_userId):
   user = db.users.find_one({'userId': _userId})
   return redirect(url_for('quiz.quiz_dashboard', db_id=str(user['_id'])))
 
-# ... (이하 다른 라우터는 동일) ...
 @quiz_bp.route("/dashboard/<string:db_id>")
 @page_auth_required
 def quiz_dashboard(db_id):
@@ -97,7 +81,6 @@ def quiz_dashboard(db_id):
   if not user:
       return redirect(url_for('quiz.quiz_list'))
 
-  # [수정] 이미 푼 퀴즈일 경우, 데이터 없이 렌더링하는 대신 리스트 페이지로 리다이렉트
   if user.get('userWhoSolvedMeCount', 0) != 0:
     return redirect(url_for('quiz.quiz_list'))
 

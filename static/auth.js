@@ -1,4 +1,3 @@
-// modal 함수 추가 
 function  showModal(title, message) 
 {
   const modal = document.getElementById("modal");
@@ -17,28 +16,21 @@ function  showModal(title, message)
 
 }
 
-// 회원가입과 로그인 폼 처리
 document.addEventListener('DOMContentLoaded', function () {
   
-  // --- 1. 회원가입 폼 처리 ---
   const signupForm = document.getElementById('signup-form');
   if (signupForm) {
-    // 중복 제출 방지를 위한 플래그
     let isSubmitting = false;
     
     signupForm.addEventListener('submit', function (event) {
-      // 기본 폼 제출(새로고침) 방지
       event.preventDefault();
       
-      // 이미 제출 중이면 중단
       if (isSubmitting) {
         return;
       }
       
-      // 제출 상태로 설정
       isSubmitting = true;
       
-      // 버튼 비활성화
       const submitButton = this.querySelector('button[type="submit"]');
       const originalText = submitButton.textContent;
       submitButton.disabled = true;
@@ -71,35 +63,27 @@ document.addEventListener('DOMContentLoaded', function () {
           showModal("🚨 오류 발생", "이미 등록된 아이디입니다.");
         })
         .finally(() => {
-          // 제출 상태 초기화
           isSubmitting = false;
           
-          // 버튼 다시 활성화
           submitButton.disabled = false;
           submitButton.textContent = originalText;
         });
     });
   }
 
-  // --- 2. 로그인 폼 처리 ---
   const loginForm = document.getElementById('login-form');
   if (loginForm) {
-    // 중복 제출 방지를 위한 플래그
     let isLoggingIn = false;
     
     loginForm.addEventListener('submit', function (event) {
-      // 기본 폼 제출(새로고침) 방지
       event.preventDefault();
       
-      // 이미 로그인 중이면 중단
       if (isLoggingIn) {
         return;
       }
       
-      // 로그인 상태로 설정
       isLoggingIn = true;
       
-      // 버튼 비활성화
       const submitButton = this.querySelector('button[type="submit"]');
       const originalText = submitButton.textContent;
       submitButton.disabled = true;
@@ -133,10 +117,8 @@ document.addEventListener('DOMContentLoaded', function () {
           showModal("🚨 오류 발생", "요청 처리 중 오류가 발생했습니다.");
         })
         .finally(() => {
-          // 로그인 상태 초기화
           isLoggingIn = false;
           
-          // 버튼 다시 활성화
           submitButton.disabled = false;
           submitButton.textContent = originalText;
         });
